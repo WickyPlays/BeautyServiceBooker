@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { commonStyles } from "../../commons/common_style";
 
 export const styles = StyleSheet.create({
   container: {
@@ -43,30 +44,34 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingBottom: 50,
+    gap: 30
   },
   loginButton: {
-    backgroundColor: '#fff',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 30,
-    borderColor: '#000',
-    color: '#000'
+    borderColor: '#FFF',
+    borderWidth: 2,
+    color: '#000',
+    flexGrow: 1
   },
   loginButtonText: {
-    color: '#000',
+    color: '#FFF',
     fontSize: 18,
     textAlign: 'center',
   },
   signupButton: {
-    backgroundColor: '#6A5ACD',
+    backgroundColor: '#ffffff',
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 30,
+    flexGrow: 1
   },
   buttonText: {
-    color: '#fff',
+    color: commonStyles.primary,
     fontSize: 18,
     textAlign: 'center',
+    fontWeight: 'bold'
   },
   pagination: {
     marginBottom: 15,
@@ -80,7 +85,7 @@ export const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 50,
-    backgroundColor: '#606060',
+    backgroundColor: '#8f8f8f',
     justifyContent: 'center'
   },
   paginationDotActive: {

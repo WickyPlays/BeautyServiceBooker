@@ -1,72 +1,98 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, RefreshControl, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
+
+const refreshTimeout = 2000; // Timeout duration extracted for reusability
 
 export default function SettingsScreen() {
+  const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+    setTimeout(() => setRefreshing(false), refreshTimeout);
   }, []);
 
   return (
     <ScrollView
-      contentContainerStyle={{ flexGrow: 1 }}
+      contentContainerStyle={styles.scrollViewContent}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
       <View style={styles.container}>
-        {/* Profile Section */}
-        <View style={styles.profileContainer}>
-          <Image
-            source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
-            style={styles.profileImage}
-          />
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>John Doe</Text>
-            <Text style={styles.profileContact}>+1-4842989351 · johndoe@gmail.com</Text>
-            <TouchableOpacity>
-              <Text style={styles.editText}>Edit</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Menu Options */}
-        <View style={styles.menuContainer}>
-          <MenuItem icon="heart-outline" title="Your favorites" subtitle="Reorder your favorite service in a click" />
-          <MenuItem icon="card-outline" title="Payments" subtitle="Payment methods, Transaction History" />
-          <MenuItem icon="location-outline" title="Manage Address" subtitle="" />
-          <MenuItem icon="notifications-outline" title="Notifications" subtitle="View your past notifications" />
-          <MenuItem icon="briefcase-outline" title="Register as partner" subtitle="Want to list your service? Register with us" />
-          <MenuItem icon="information-circle-outline" title="About" subtitle="Privacy Policy, Terms of Services, Licenses" />
-        </View>
-
-        {/* Logout Button */}
-        <TouchableOpacity style={styles.logoutButton}>
-          <Ionicons name="log-out-outline" size={24} color="red" />
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
+        <ProfileSection />
+        <MenuSection navigation={navigation} />
+        <LogoutButton />
       </View>
     </ScrollView>
   );
 }
 
-// Helper Component for Menu Item
-const MenuItem = ({ icon, title, subtitle }) => (
-  <TouchableOpacity style={styles.menuItem}>
+const ProfileSection = () => (
+  <View style={styles.profileContainer}>
+    <Image
+      source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
+      style={styles.profileImage}
+    />
+    <View style={styles.profileInfo}>
+      <Text style={styles.profileName}>John Doe</Text>
+      <Text style={styles.profileContact}>+1-4842989351 · johndoe@gmail.com</Text>
+      <TouchableOpacity>
+        <Text style={styles.editText}>Edit</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+);
+
+const MenuSection = ({ navigation }) => (
+  <View style={styles.menuContainer}>
+    {menuItems.map(({ icon, title, subtitle, redirect }, index) => (
+      <MenuItem
+        key={index}
+        navigation={navigation}
+        icon={icon}
+        title={title}
+        subtitle={subtitle}
+        redirect={redirect}
+      />
+    ))}
+  </View>
+);
+
+const MenuItem = ({ navigation, icon, title, subtitle, redirect }) => (
+  <TouchableOpacity
+    style={styles.menuItem}
+    onPress={() => redirect && navigation.navigate(redirect)}
+  >
     <Ionicons name={icon} size={24} color="#000" />
     <View style={styles.menuText}>
       <Text style={styles.menuTitle}>{title}</Text>
-      {subtitle ? <Text style={styles.menuSubtitle}>{subtitle}</Text> : null}
+      {subtitle && <Text style={styles.menuSubtitle}>{subtitle}</Text>}
     </View>
     <Ionicons name="chevron-forward-outline" size={24} color="#A0A0A0" />
   </TouchableOpacity>
 );
 
-// Styles
+const LogoutButton = () => (
+  <TouchableOpacity style={styles.logoutButton}>
+    <Ionicons name="log-out-outline" size={24} color="red" />
+    <Text style={styles.logoutText}>Logout</Text>
+  </TouchableOpacity>
+);
+
+const menuItems = [
+  { icon: 'heart-outline', title: 'Your favorites', subtitle: 'Reorder your favorite service in a click' },
+  { icon: 'card-outline', title: 'Payments', subtitle: 'Payment methods, Transaction History' },
+  { icon: 'location-outline', title: 'Manage Address', redirect: 'SettingsSavedAddress' },
+  { icon: 'notifications-outline', title: 'Notifications', subtitle: 'View your past notifications' },
+  { icon: 'briefcase-outline', title: 'Register as partner', subtitle: 'Want to list your service? Register with us' },
+  { icon: 'information-circle-outline', title: 'About', subtitle: 'Privacy Policy, Terms of Services, Licenses' },
+];
+
 const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     padding: 20,

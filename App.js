@@ -12,6 +12,7 @@ import SettingsScreen from './screens/SettingsScreen/SettingsScreen';
 import BookingScreen from './screens/BookingScreen';
 import { commonStyles } from './commons/common_style';
 import SettingsSavedAddress from './screens/SettingsScreen/SettingsSavedAddress';
+import IntroScreen from './screens/IntroScreen/IntroScreen';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -54,6 +55,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="SplashScreen" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="IntroScreen" component={IntroScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="PrimaryScreen" component={PrimaryScreen} />
         <Stack.Screen name="SettingsSavedAddress" component={SettingsSavedAddress} />

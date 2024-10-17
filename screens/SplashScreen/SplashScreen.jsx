@@ -5,7 +5,7 @@ import {styles} from "./SplashScreen.style";
 export default function SplashScreen({ navigation }) {
   useEffect(() => {
     const timer = setTimeout(async () => {
-      navigation.navigate("LoginScreen")
+      navigation.navigate("IntroScreen")
     }, 2000);
     return () => clearTimeout(timer);
   }, [navigation]);

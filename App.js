@@ -13,6 +13,7 @@ import BookingScreen from './screens/BookingScreen';
 import { commonStyles } from './commons/common_style';
 import SettingsSavedAddress from './screens/SettingsScreen/SettingsSavedAddress';
 import IntroScreen from './screens/IntroScreen/IntroScreen';
+import SignupScreen from './screens/SignupScreen/SignupScreen';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -58,6 +59,7 @@ export default function App() {
         <Stack.Screen name="IntroScreen" component={IntroScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="PrimaryScreen" component={PrimaryScreen} />
+        <Stack.Screen name="SignupScreen" component={SignupScreen} />
         <Stack.Screen name="SettingsSavedAddress" component={SettingsSavedAddress} />
       </Stack.Navigator>
       <StatusBar style="auto" />

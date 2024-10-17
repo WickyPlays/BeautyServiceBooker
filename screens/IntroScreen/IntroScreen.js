@@ -56,7 +56,7 @@ export default function IntroScreen({ navigation }) {
         <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('LoginScreen')}>
           <Text style={styles.loginButtonText}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.signupButton} onPress={() => { }}>
+        <TouchableOpacity style={styles.signupButton} onPress={() => navigation.navigate('SignupScreen')}>
           <Text style={styles.buttonText}>Get started</Text>
         </TouchableOpacity>
       </View>

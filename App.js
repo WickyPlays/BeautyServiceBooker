@@ -20,15 +20,18 @@ function PrimaryScreen() {
     <Tab.Navigator
       tabBarPosition="bottom"
       screenOptions={({ route }) => ({
-        swipeEnabled:true,
+        swipeEnabled: true,
+        tabBarPressColor: "#FAF0FF",
         tabBarIndicatorStyle: { backgroundColor: "transparent" },
-
+        tabBarInactiveTintColor: 'gray',
         tabBarActiveTintColor: commonStyles.primary,
         tabBarIcon: ({ focused, color }) => {
           let iconName;
 
           if (route.name === 'Home') {
             iconName = 'home';
+          } else if (route.name === "Booking") {
+            iconName = 'ticket'
           } else if (route.name === 'Settings') {
             iconName = 'settings';
           }
@@ -39,6 +42,7 @@ function PrimaryScreen() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name='Booking' component={BookingScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
@@ -51,7 +55,6 @@ export default function App() {
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="PrimaryScreen" component={PrimaryScreen} />
-        <Stack.Screen name='BookingScreen' component={BookingScreen} />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

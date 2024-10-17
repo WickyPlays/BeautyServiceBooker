@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from './screens/LoginScreen';
+import LoginScreen from './screens/LoginScreen/LoginScreen';
 import BookingScreen from './screens/BookingScreen';
 
 const Stack = createStackNavigator();

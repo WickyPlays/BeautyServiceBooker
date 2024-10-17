@@ -24,7 +24,7 @@ export default function LoginScreen() {
 				/>
 				<TouchableOpacity
 					style={styles.button}
-					onPress={() => navigation.navigate('BookingScreen')}
+					onPress={() => navigation.navigate('PrimaryScreen')}
 				>
 					<Text style={styles.buttonText}>Login</Text>
 				</TouchableOpacity>

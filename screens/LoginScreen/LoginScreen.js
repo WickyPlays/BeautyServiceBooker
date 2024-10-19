@@ -13,14 +13,15 @@ export default function LoginScreen({ navigation }) {
 	const handleLogin = async () => {
 		try {
 			const response = await apost('/auth/login', { email: email, password: password });
-			const data = await response.data
-
-			if (response.status !== 200 || !data.token) {
+			const access_token = await response.data.access_token
+			const userInfo =  await response.data.userInfo
+			if (response.status !== 200 || !access_token) {
 				setErrorMessage('Something went wrong. Try again later');
 				return;
 			}
 
-			await saveToken(data.token);
+			await saveToken(access_token);
+			// await saveInfo(userInfo);
 			setErrorMessage('');
 			navigation.navigate('PrimaryScreen');
 

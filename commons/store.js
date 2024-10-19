@@ -32,24 +32,13 @@ export const removeToken = async () => {
 export const getUserFromToken = async () => {
   try {
     const token = await getToken();
-    if (!token) {
-      return null;
+    console.log("token", token);
+    if (token) {
+      return token.userInfo;
     }
-
-    const decodedToken = jwtDecode(token);
-    if (!decodedToken) {
-      return null;
-    }
-
-    const { exp } = decodedToken;
-    if (Date.now() >= exp * 1000) {
-      await removeToken();
-      return null;
-    }
-
-    return decodedToken;
+    return null;
   } catch (error) {
-    console.error('Error decoding token:', error);
+    console.error('Error getting user from token:', error);
     return null;
   }
 };

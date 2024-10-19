@@ -10,6 +10,11 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
   },
+  errorMessage: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
   backButton: {
     position: 'absolute',
     top: 55,

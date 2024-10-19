@@ -1,6 +1,7 @@
 import axios from "axios";
+import { getToken } from "./store";
 
-const MASTER_URL = "API_LINK_HERE";
+const MASTER_URL = "http://10.0.2.2:5001";
 
 const axiosInstance = axios.create({
   baseURL: MASTER_URL,
@@ -9,7 +10,13 @@ const axiosInstance = axios.create({
   },
 });
 
-axiosInstance.interceptors.request.use((config) => {
+axiosInstance.interceptors.request.use(async (config) => {
+
+  const token = await getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return config;
 }, (error) => {
   return Promise.reject(error);

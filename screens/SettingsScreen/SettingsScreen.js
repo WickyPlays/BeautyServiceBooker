@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, ScrollView, RefreshControl, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import { removeToken } from '../../commons/store';
 
-const refreshTimeout = 2000; // Timeout duration extracted for reusability
+const refreshTimeout = 2000;
 
-export default function SettingsScreen() {
-  const navigation = useNavigation();
+export default function SettingsScreen({navigation}) {
+
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
@@ -22,7 +22,7 @@ export default function SettingsScreen() {
       <View style={styles.container}>
         <ProfileSection />
         <MenuSection navigation={navigation} />
-        <LogoutButton />
+        <LogoutButton navigation={navigation} />
       </View>
     </ScrollView>
   );
@@ -73,8 +73,12 @@ const MenuItem = ({ navigation, icon, title, subtitle, redirect }) => (
   </TouchableOpacity>
 );
 
-const LogoutButton = () => (
-  <TouchableOpacity style={styles.logoutButton}>
+const LogoutButton = ({navigation}) => (
+  
+  <TouchableOpacity style={styles.logoutButton} onPress={async () => {
+    await removeToken();
+    navigation.navigate('LoginScreen');
+  }}>
     <Ionicons name="log-out-outline" size={24} color="red" />
     <Text style={styles.logoutText}>Logout</Text>
   </TouchableOpacity>

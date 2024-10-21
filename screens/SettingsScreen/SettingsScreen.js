@@ -9,16 +9,18 @@ import {
   StyleSheet,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import useAuthStore from '../../commons/authenStore';
+import useAuthStore from "../../commons/authenStore";
 import useNavigationStore from "../../navigationRef";
 const refreshTimeout = 2000;
 
 export default function SettingsScreen({ navigation }) {
+  const { user } = useAuthStore();
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => setRefreshing(false), refreshTimeout);
   }, []);
+  console.log("user info in setting", user)
 
   return (
     <ScrollView
@@ -28,7 +30,7 @@ export default function SettingsScreen({ navigation }) {
       }
     >
       <View style={styles.container}>
-        <ProfileSection />
+        <ProfileSection user={user} />
         <MenuSection navigation={navigation} />
         <LogoutButton navigation={navigation} />
       </View>
@@ -36,16 +38,16 @@ export default function SettingsScreen({ navigation }) {
   );
 }
 
-const ProfileSection = () => (
+const ProfileSection = ({ user }) => (
   <View style={styles.profileContainer}>
     <Image
       source={{ uri: "https://randomuser.me/api/portraits/men/32.jpg" }}
       style={styles.profileImage}
     />
     <View style={styles.profileInfo}>
-      <Text style={styles.profileName}>John Doe</Text>
+      <Text style={styles.profileName}>{user.name}</Text>
       <Text style={styles.profileContact}>
-        +1-4842989351 · johndoe@gmail.com
+        {user.phone} · {user.email}
       </Text>
       <TouchableOpacity>
         <Text style={styles.editText}>Edit</Text>
@@ -83,7 +85,7 @@ const MenuItem = ({ navigation, icon, title, subtitle, redirect }) => (
   </TouchableOpacity>
 );
 
-const LogoutButton = ({ navigation }) => {
+const LogoutButton = () => {
   const logout = useAuthStore((state) => state.logout);
   const navigateToAuth = useNavigationStore((state) => state.navigateToAuth);
   return (

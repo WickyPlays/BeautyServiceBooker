@@ -1,6 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import {
   HomeStack,
   BookingStack,
@@ -14,8 +14,8 @@ const TabNavigation = () => {
     <CheckAuthWrapper>
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: "black",
-          tabBarInactiveTintColor: "gray",
+          tabBarActiveTintColor: "purple",
+          tabBarInactiveTintColor: "black",
           unmountOnBlur: true,
         }}
       >
@@ -25,7 +25,7 @@ const TabNavigation = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({ size, color }) => (
-              <Ionicons name="home" size={size} color={color} />
+              <Feather name="home" size={size} color={color} />
             ),
           }}
         />
@@ -35,7 +35,7 @@ const TabNavigation = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({ size, color }) => (
-              <Ionicons name="calendar" size={size} color={color} />
+              <Feather name="calendar" size={size} color={color} />
             ),
           }}
         />
@@ -45,7 +45,7 @@ const TabNavigation = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({ size, color }) => (
-              <Ionicons name="settings" size={size} color={color} />
+              <Feather name="settings" size={size} color={color} />
             ),
           }}
         />

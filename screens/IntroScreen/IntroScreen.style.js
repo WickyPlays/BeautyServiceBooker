@@ -4,6 +4,7 @@ import { commonStyles } from "../../commons/common_style";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000',  // Ensure background color is set to black for better image contrast
   },
   imageCover: {
     position: 'absolute',
@@ -12,11 +13,11 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     zIndex: 1,
-    backgroundColor: '#0000008a'
+    backgroundColor: '#00000080',  // Slightly lighter opacity for better visibility of image
   },
   backgroundImage: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',  // Adjusted to center the text better vertically
     width: '100%',
     height: '100%',
   },
@@ -24,27 +25,29 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 100,
+    paddingTop: 80,  // Reduced top padding for better centering
   },
   carouselItem: {
     position: 'absolute',
-    bottom: '25%',
+    bottom: '30%',  // Adjusted bottom for more consistency across screen sizes
     zIndex: 3,
     width: '100%',
     paddingHorizontal: 20,
   },
   carouselText: {
     color: '#fff',
-    fontSize: 35,
+    fontSize: 32,  // Slightly reduced font size for better fit
     fontWeight: 'bold',
-    textAlign: 'left'
+    textAlign: 'center',  // Centered text for a cleaner look
+    paddingHorizontal: 10,  // Added padding to avoid text touching screen edges
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 50,
-    gap: 30
+    justifyContent: 'space-evenly',  // Better alignment for buttons across all screen sizes
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    paddingBottom: 40,  // Adjusted for more consistent bottom spacing
+    gap: 20,  // Reduced gap for a tighter layout
   },
   loginButton: {
     paddingVertical: 15,
@@ -52,8 +55,8 @@ export const styles = StyleSheet.create({
     borderRadius: 30,
     borderColor: '#FFF',
     borderWidth: 2,
-    color: '#000',
-    flexGrow: 1
+    flexGrow: 1,
+    alignItems: 'center',  // Ensures text stays centered
   },
   loginButtonText: {
     color: '#FFF',
@@ -65,34 +68,33 @@ export const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 30,
-    flexGrow: 1
+    flexGrow: 1,
+    alignItems: 'center',  // Ensures text stays centered
   },
   buttonText: {
     color: commonStyles.primary,
     fontSize: 18,
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   pagination: {
-    marginBottom: 15,
+    marginBottom: 20,  // Adjusted for better spacing with buttons
     flexDirection: 'row',
     paddingVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 15
+    gap: 12,  // Reduced gap for pagination dots
   },
   paginationDot: {
     width: 10,
     height: 10,
     borderRadius: 50,
     backgroundColor: '#8f8f8f',
-    justifyContent: 'center'
   },
   paginationDotActive: {
-    width: 13,
-    height: 13,
+    width: 12,  // Slightly larger active dot
+    height: 12,
     borderRadius: 50,
     backgroundColor: '#FFF',
-    justifyContent: 'center'
   }
 });

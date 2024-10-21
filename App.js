@@ -1,69 +1,58 @@
-import React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Ionicons } from '@expo/vector-icons';
-
-import SplashScreen from './screens/SplashScreen/SplashScreen';
-import LoginScreen from './screens/LoginScreen/LoginScreen';
-import HomeScreen from './screens/HomeScreen/HomeScreen';
-import SettingsScreen from './screens/SettingsScreen/SettingsScreen';
-import BookingScreen from './screens/BookingScreen';
-import { commonStyles } from './commons/common_style';
-import SettingsSavedAddress from './screens/SettingsScreen/SettingsSavedAddress';
-import IntroScreen from './screens/IntroScreen/IntroScreen';
-import SignupScreen from './screens/SignupScreen/SignupScreen';
-import SearchScreen from './screens/SearchScreen/SearchScreen';
+import React, { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { AuthStackScreen } from "./navigation/authenNavigation/authen";
+import useAuthStore from "./commons/authenStore";
+import TabNavigation from "./navigation/bottomNavigation/tabNavigation";
+import { navigationRef } from "./navigationRef";
+import SplashScreen from "./screens/SplashScreen/SplashScreen";
+import IntroScreen from "./screens/IntroScreen/IntroScreen";
 
 const Stack = createStackNavigator();
-const Tab = createMaterialTopTabNavigator();
 
-function PrimaryScreen() {
-  return (
-    <Tab.Navigator
-      tabBarPosition="bottom"
-      screenOptions={({ route }) => ({
-        swipeEnabled: true,
-        tabBarPressColor: "#FAF0FF",
-        tabBarIndicatorStyle: { backgroundColor: "transparent" },
-        tabBarInactiveTintColor: 'gray',
-        tabBarActiveTintColor: commonStyles.primary,
-        tabBarIcon: ({ focused, color }) => {
-          let iconName;
+const CheckAuthProvider = ({ children }) => {
+  const { isAuthenticated, initializeAuth } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(true);
 
-          if (route.name === 'Home') {
-            iconName = 'home';
-          } else if (route.name === "Booking") {
-            iconName = 'ticket'
-          } else if (route.name === 'Settings') {
-            iconName = 'settings';
-          }
+  useEffect(() => {
+    initializeAuth();
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // Simulate loading time
+  }, [initializeAuth]);
 
-          return <Ionicons name={iconName} color={color} size={24} />;
-        },
-        tabBarShowLabel: true,
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name='Booking' component={BookingScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
-  );
-}
+  if (isLoading) {
+    return <SplashScreen />;
+  }
+
+  return children(isAuthenticated);
+};
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="SplashScreen" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name="IntroScreen" component={IntroScreen} />
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="PrimaryScreen" component={PrimaryScreen} />
-        <Stack.Screen name="SignupScreen" component={SignupScreen} />
-        <Stack.Screen name="SettingsSavedAddress" component={SettingsSavedAddress} />
-        <Stack.Screen name='SearchScreen' component={SearchScreen} />
-      </Stack.Navigator>
+    <NavigationContainer ref={navigationRef}>
+      <CheckAuthProvider>
+        {(isAuthenticated) => (
+          <Stack.Navigator>
+            {!isAuthenticated ? (
+              <>
+                <Stack.Screen
+                  name="Auth"
+                  component={AuthStackScreen}
+                  options={{ headerShown: false }}
+                />
+              </>
+            ) : (
+              <Stack.Screen
+                name="Main"
+                component={TabNavigation}
+                options={{ headerShown: false }}
+              />
+            )}
+          </Stack.Navigator>
+        )}
+      </CheckAuthProvider>
       <StatusBar style="auto" />
     </NavigationContainer>
   );

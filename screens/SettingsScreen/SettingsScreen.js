@@ -1,14 +1,20 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, ScrollView, RefreshControl, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { removeToken } from '../../commons/store';
-
+import React, { useState, useCallback } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  RefreshControl,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+} from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import useAuthStore from '../../commons/authenStore';
+import useNavigationStore from "../../navigationRef";
 const refreshTimeout = 2000;
 
-export default function SettingsScreen({navigation}) {
-
+export default function SettingsScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
-
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(() => setRefreshing(false), refreshTimeout);
@@ -17,7 +23,9 @@ export default function SettingsScreen({navigation}) {
   return (
     <ScrollView
       contentContainerStyle={styles.scrollViewContent}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <View style={styles.container}>
         <ProfileSection />
@@ -31,12 +39,14 @@ export default function SettingsScreen({navigation}) {
 const ProfileSection = () => (
   <View style={styles.profileContainer}>
     <Image
-      source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
+      source={{ uri: "https://randomuser.me/api/portraits/men/32.jpg" }}
       style={styles.profileImage}
     />
     <View style={styles.profileInfo}>
       <Text style={styles.profileName}>John Doe</Text>
-      <Text style={styles.profileContact}>+1-4842989351 · johndoe@gmail.com</Text>
+      <Text style={styles.profileContact}>
+        +1-4842989351 · johndoe@gmail.com
+      </Text>
       <TouchableOpacity>
         <Text style={styles.editText}>Edit</Text>
       </TouchableOpacity>
@@ -73,24 +83,54 @@ const MenuItem = ({ navigation, icon, title, subtitle, redirect }) => (
   </TouchableOpacity>
 );
 
-const LogoutButton = ({navigation}) => (
-  
-  <TouchableOpacity style={styles.logoutButton} onPress={async () => {
-    await removeToken();
-    navigation.navigate('LoginScreen');
-  }}>
-    <Ionicons name="log-out-outline" size={24} color="red" />
-    <Text style={styles.logoutText}>Logout</Text>
-  </TouchableOpacity>
-);
+const LogoutButton = ({ navigation }) => {
+  const logout = useAuthStore((state) => state.logout);
+  const navigateToAuth = useNavigationStore((state) => state.navigateToAuth);
+  return (
+    <TouchableOpacity
+      style={styles.logoutButton}
+      onPress={async () => {
+        await logout();
+        navigateToAuth();
+      }}
+    >
+      <Ionicons name="log-out-outline" size={24} color="red" />
+      <Text style={styles.logoutText}>Logout</Text>
+    </TouchableOpacity>
+  );
+};
 
 const menuItems = [
-  { icon: 'heart-outline', title: 'Your favorites', subtitle: 'Reorder your favorite service in a click' },
-  { icon: 'card-outline', title: 'Payments', subtitle: 'Payment methods, Transaction History' },
-  { icon: 'location-outline', title: 'Manage Address', redirect: 'SettingsSavedAddress' },
-  { icon: 'notifications-outline', title: 'Notifications', subtitle: 'View your past notifications' },
-  { icon: 'briefcase-outline', title: 'Register as partner', subtitle: 'Want to list your service? Register with us' },
-  { icon: 'information-circle-outline', title: 'About', subtitle: 'Privacy Policy, Terms of Services, Licenses' },
+  {
+    icon: "heart-outline",
+    title: "Your favorites",
+    subtitle: "Reorder your favorite service in a click",
+  },
+  {
+    icon: "card-outline",
+    title: "Payments",
+    subtitle: "Payment methods, Transaction History",
+  },
+  {
+    icon: "location-outline",
+    title: "Manage Address",
+    redirect: "SettingsSavedAddress",
+  },
+  {
+    icon: "notifications-outline",
+    title: "Notifications",
+    subtitle: "View your past notifications",
+  },
+  {
+    icon: "briefcase-outline",
+    title: "Register as partner",
+    subtitle: "Want to list your service? Register with us",
+  },
+  {
+    icon: "information-circle-outline",
+    title: "About",
+    subtitle: "Privacy Policy, Terms of Services, Licenses",
+  },
 ];
 
 const styles = StyleSheet.create({
@@ -101,11 +141,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     paddingTop: 80,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   profileContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 30,
   },
   profileImage: {
@@ -119,26 +159,26 @@ const styles = StyleSheet.create({
   },
   profileName: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   profileContact: {
     fontSize: 14,
-    color: '#A0A0A0',
+    color: "#A0A0A0",
   },
   editText: {
     fontSize: 14,
-    color: '#6200EE',
+    color: "#6200EE",
     marginTop: 5,
   },
   menuContainer: {
     marginTop: 10,
   },
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: "#E0E0E0",
   },
   menuText: {
     flex: 1,
@@ -146,22 +186,21 @@ const styles = StyleSheet.create({
   },
   menuTitle: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   menuSubtitle: {
     fontSize: 13,
-    color: '#A0A0A0',
+    color: "#A0A0A0",
   },
   logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 30,
   },
   logoutText: {
-    color: 'red',
+    color: "red",
     fontSize: 16,
     marginLeft: 10,
   },
 });
-

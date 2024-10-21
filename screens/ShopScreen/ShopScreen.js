@@ -1,9 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, RefreshControl, StyleSheet, TouchableOpacity, Image, SectionList, ScrollView, Share, Linking, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { styles } from './HomeScreen.style';
+import { styles } from './ShopScreen.style';
 import { ImageBackground } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
 const data = {
   name: 'Woodlands Hills Salon',
@@ -34,7 +33,7 @@ const data = {
   ],
 };
 
-export default function HomeScreen({navigation}) {
+export default function ShopScreen({navigation}) {
 
   const [refreshing, setRefreshing] = useState(false);
   const [scrollY, setScrollY] = useState(0);

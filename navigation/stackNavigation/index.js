@@ -66,4 +66,5 @@ const SettingsStack = () => {
   );
 };
 
-export { HomeStack, BookingStack, SettingsStack };
+
+export { HomeStack, BookingStack, SettingsStack};

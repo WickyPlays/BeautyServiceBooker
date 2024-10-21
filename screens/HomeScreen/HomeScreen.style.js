@@ -1,200 +1,61 @@
-import { StyleSheet } from 'react-native';
-import { commonStyles } from '../../commons/common_style';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
-  header: {
+  servicesContainer: {
+    marginBottom: 40,
+    paddingHorizontal: 15,
+  },
+  locationContainer: {
+    marginTop: 45,
+    marginBottom: 20,
+  },
+  locationText: {
+    fontSize: 18,
+    paddingHorizontal: 15,
+  },
+  searchContainer: {
     flexDirection: 'row',
-    backgroundColor: '#f8f8f8',
-    width: '100%',
-    height: 250,
-  },
-  headerImage: {
-    zIndex: 0,
-    width: '100%',
-    height: '100%',
-  },
-  headerContent: {
-    position: 'absolute',
-    zIndex: 1,
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    padding: 20,
-    justifyContent: 'flex-end',
-  },
-  headerImageOverlay: {
-    backgroundColor: '#00000081',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    height: 100,
-  },
-  salonName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  salonDetails: {
-    color: '#fff',
-    marginVertical: 4,
-  },
-  searchIconContainer: {
-    position: 'absolute',
-    top: 45,
-    right: 20,
-    zIndex: 2,
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingHorizontal: 15,
   },
   searchIcon: {
-    width: 35,
-    height: 35,
-    padding: 5,
-    borderRadius: 50,
-    backgroundColor: 'white',
-    justifyContent: 'center', 
-    alignItems: 'center',
+    marginHorizontal: 10,
   },
-  headerActionsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 120,
-    gap: 25,
-    marginVertical: 4,
-  },
-  headerActionsButtons: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  ratingContainer: {
-    alignItems: 'center',
-  },
-  rating: {
-    borderColor: commonStyles.primary,
+  searchInput: {
+    padding: 10,
+    flex: 1,
+    borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
-    padding: 3,
-    color: commonStyles.primary,
-    marginBottom: 2,
   },
-  ratingCount: {
-    fontSize: 12,
-    color: commonStyles.primary,
+  searchButton: {
+    marginLeft: 10,
   },
-  promoList: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  promoItem: {
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
-    padding: 10,
-    borderRadius: 8,
-    marginRight: 10,
-    flexDirection: 'column',
-  },
-  promoCode: {
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  promoDiscount: {
-    fontSize: 14,
-    color: '#333',
-  },
-  tabList: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  tab: {
-    padding: 10,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
-    marginRight: 10,
-    borderRadius: 8,
-  },
-  tabText: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  servicesHeader: {
+    fontSize: 20,
     marginVertical: 10,
-    marginLeft: 16,
+    marginBottom: 15,
+    fontWeight: 'bold'
   },
-  serviceItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
-  },
-  serviceImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 10,
-    marginRight: 16,
-  },
-  serviceInfo: {
-    flex: 1,
-  },
-  serviceTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  serviceDetails: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 4,
-  },
-  serviceText: {
-    marginLeft: 6,
-    fontSize: 14,
-  },
-  selectButton: {
-    backgroundColor: '#5e72eb',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 5,
-  },
-  selectText: {
-    color: '#fff',
-  },
-  fixedHeader: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 90,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
+  servicesGrid: {
     justifyContent: 'space-between',
+  },
+  serviceTypeContainer: {
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 42,
-    paddingBottom: 5,
-    zIndex: 3,
-    elevation: 4,
+    marginBottom: 20,
+    flexBasis: '30%',
   },
-  fixedHeaderTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
+  serviceTypeImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
+  serviceTypeText: {
+    marginTop: 5,
+    fontSize: 14,
+  }
 });

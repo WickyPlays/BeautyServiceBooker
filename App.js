@@ -8,6 +8,7 @@ import TabNavigation from "./navigation/bottomNavigation/tabNavigation";
 import { navigationRef } from "./navigationRef";
 import SplashScreen from "./screens/SplashScreen/SplashScreen";
 import IntroScreen from "./screens/IntroScreen/IntroScreen";
+import DetailScreen from "./screens/DetailScreen/DetailScreen";
 
 const Stack = createStackNavigator();
 
@@ -44,11 +45,20 @@ export default function App() {
                 />
               </>
             ) : (
-              <Stack.Screen
-                name="Main"
-                component={TabNavigation}
-                options={{ headerShown: false }}
-              />
+              <>
+                <Stack.Screen
+                  name="Main"
+                  component={TabNavigation}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Detail"
+                  component={DetailScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+              </>
             )}
           </Stack.Navigator>
         )}

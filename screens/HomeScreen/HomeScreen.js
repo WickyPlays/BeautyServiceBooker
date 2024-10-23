@@ -3,6 +3,7 @@ import { View, Text, RefreshControl, StyleSheet, TouchableOpacity, Image, Sectio
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from './HomeScreen.style';
 import { ImageBackground } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const data = {
   name: 'Woodlands Hills Salon',
@@ -34,6 +35,7 @@ const data = {
 };
 
 export default function HomeScreen({navigation}) {
+
   const [refreshing, setRefreshing] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
@@ -91,91 +93,82 @@ export default function HomeScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        onScroll={(e) => setScrollY(e.nativeEvent.contentOffset.y)}
-        scrollEventThrottle={5}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-      >
-        {scrollY <= 200 && (
-          <View style={styles.searchIconContainer}>
-            <TouchableOpacity onPress={handleSearch}>
-              <Ionicons style={styles.searchIcon} name="search" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
+      <SectionList
+        sections={[
+          { title: 'Recommended Services', data: data.servicesList },
+          { title: 'Packages', data: data.packagesList },
+        ]}
+        keyExtractor={(item) => item.id}
+        renderItem={renderServiceItem}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text style={styles.sectionTitle}>{title}</Text>
         )}
-
-        {/* Header Section */}
-        <View style={styles.header}>
-          <ImageBackground
-            resizeMode="cover"
-            source={{ uri: data.banner }}
-            style={styles.headerImage}
-          />
-          <View style={styles.headerImageOverlay}>
-            <View style={styles.headerContent}>
-              <Text style={styles.salonName}>{data.name}</Text>
-              <Text style={styles.salonDetails}>{data.address} • {data.distance} • {data.priceLevel}</Text>
+        ListHeaderComponent={() => (
+          <>
+            {/* Header Section */}
+            <View style={styles.header}>
+              <ImageBackground
+                resizeMode="cover"
+                source={{ uri: data.banner }}
+                style={styles.headerImage}
+              />
+              <View style={styles.headerImageOverlay}>
+                <View style={styles.headerContent}>
+                  <Text style={styles.salonName}>{data.name}</Text>
+                  <Text style={styles.salonDetails}>{data.address} • {data.distance} • {data.priceLevel}</Text>
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
 
-        {/* Action Buttons */}
-        <View style={styles.headerActionsContainer}>
-          <View style={styles.headerActions}>
-            <TouchableOpacity style={styles.headerActionsButtons} onPress={handleCall}>
-              <Ionicons name="call-outline" size={24} color="black" />
-              <Text>Call</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.headerActionsButtons}>
-              <Ionicons name="navigate-outline" size={24} color="black" />
-              <Text>Directions</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.headerActionsButtons} onPress={handleShare}>
-              <Ionicons name="share-social-outline" size={24} color="black" />
-              <Text>Share</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.ratingContainer}>
-            <Text style={styles.rating}>⭐ {data.rating}</Text>
-            <Text style={styles.ratingCount}>{data.ratingCount} ratings</Text>
-          </View>
-        </View>
-
-        {/* Promo Section */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.promoList}>
-          {data.promoList.map((promo, i) => (
-            <View key={i}>
-              {renderPromoItem(promo)}
+            {/* Action Buttons */}
+            <View style={styles.headerActionsContainer}>
+              <View style={styles.headerActions}>
+                <TouchableOpacity style={styles.headerActionsButtons} onPress={handleCall}>
+                  <Ionicons name="call-outline" size={24} color="black" />
+                  <Text>Call</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.headerActionsButtons}>
+                  <Ionicons name="navigate-outline" size={24} color="black" />
+                  <Text>Directions</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.headerActionsButtons} onPress={handleShare}>
+                  <Ionicons name="share-social-outline" size={24} color="black" />
+                  <Text>Share</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.ratingContainer}>
+                <Text style={styles.rating}>⭐ {data.rating}</Text>
+                <Text style={styles.ratingCount}>{data.ratingCount} ratings</Text>
+              </View>
             </View>
-          ))}
-        </ScrollView>
 
-        {/* Tabs Section */}
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={data.tabs}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.tab}>
-              <Text style={styles.tabText}>{item.title}</Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.id}
-        />
+            {/* Promo Section */}
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={data.promoList}
+              style={styles.promoList}
+              renderItem={({ item }) => renderPromoItem(item)}
+              keyExtractor={(item) => item.id}
+            />
 
-        {/* Services & Packages Section */}
-        <SectionList
-          sections={[
-            { title: 'Recommended Services', data: data.servicesList },
-            { title: 'Packages', data: data.packagesList },
-          ]}
-          keyExtractor={(item) => item.id}
-          renderItem={renderServiceItem}
-          renderSectionHeader={({ section: { title } }) => (
-            <Text style={styles.sectionTitle}>{title}</Text>
-          )}
-        />
-      </ScrollView>
+            {/* Tabs Section */}
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={data.tabs}
+              renderItem={({ item }) => (
+                <TouchableOpacity style={styles.tab}>
+                  <Text style={styles.tabText}>{item.title}</Text>
+                </TouchableOpacity>
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          </>
+        )}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      />
+
 
       {scrollY > 100 && (
         <View style={styles.fixedHeader}>

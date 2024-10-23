@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import {styles} from "./SplashScreen.style";
+import { View, Text, ActivityIndicator } from "react-native";
+import { styles } from "./SplashScreen.style";
+import { commonStyles } from "../../commons/common_style";
 
-export default function SplashScreen({ navigation }) {
+export default function SplashScreen() {
+
   useEffect(() => {
-    const timer = setTimeout(async () => {
-      navigation.navigate("IntroScreen")
-    }, 2000);
+    const timer = setTimeout(() => {}, 2000);
     return () => clearTimeout(timer);
-  }, [navigation]);
+  }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.subTitle}>Welcome to</Text>
       <Text style={styles.title}>Beauty Service Booker</Text>
-      <ActivityIndicator size="large" color="#007A00" />
+      <ActivityIndicator size="large" color={commonStyles.primary} />
 
       <Text style={styles.footer}>An MMA301 group project</Text>
     </View>

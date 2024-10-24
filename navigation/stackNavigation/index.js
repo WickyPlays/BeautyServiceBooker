@@ -4,6 +4,7 @@ import HomeScreen from "../../screens/HomeScreen/HomeScreen";
 import SettingScreen from "../../screens/SettingsScreen/SettingsScreen";
 import SettingSavedAddress from "../../screens/SettingsScreen/SettingsSavedAddress";
 import BookingScreen from "../../screens/BookingScreen/BookingScreen";
+import ShopScreen from "../../screens/ShopScreen/ShopScreen";
 const Stack = createStackNavigator();
 
 // Stack for home page
@@ -20,8 +21,23 @@ const HomeStack = () => (
         headerShown: false,
       }}
     />
+    <Stack.Screen
+      name="maleshop"
+      component={ShopScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
+     <Stack.Screen
+      name="femaleShop"
+      component={ShopScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
   </Stack.Navigator>
 );
+
 
 const BookingStack = () => {
   return (
@@ -66,5 +82,4 @@ const SettingsStack = () => {
   );
 };
 
-
-export { HomeStack, BookingStack, SettingsStack};
+export { HomeStack, BookingStack, SettingsStack };

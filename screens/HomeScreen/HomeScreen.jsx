@@ -1,63 +1,78 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Image, TouchableOpacity, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import IonIcons from 'react-native-vector-icons/Ionicons';
-import { aget } from '../../commons/util_axios';
-import {styles} from './HomeScreen.style.js';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import IonIcons from "react-native-vector-icons/Ionicons";
+import { styles } from "./HomeScreen.style.js";
+import FemaleSalon from "../../assets/0e9e0e438c537d5139a55e274584893e.png";
+import MaleSalon from "../../assets/istockphoto-640274128-612x612.jpg";
 
 const HomeScreen = () => {
-  const [services, setServices] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const navigation = useNavigation();
+  const [shops, setShops] = useState([
+    {
+      id: "1",
+      name: "Woodlands Hills Salon",
+      type: "male",
+      services: "Haircut, Spa, Massage",
+      image: MaleSalon,
+    },
+    {
+      id: "2",
+      name: "Style Lounge Salon",
+      type: "female",
+      services: "Haircut, Spa, Massage",
+      image: FemaleSalon,
+    },
+  ]);
 
-  useEffect(() => {
-    aget('/services')
-      .then((response) => {
-        setServices(response.data.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching services:', error);
-      });
-  }, []);
-
-  const renderServiceType = (service) => (
-    <TouchableOpacity
-      key={service._id}
-      style={styles.serviceTypeContainer}
-      onPress={() => navigation.navigate('Detail', { itemId: service._id })}
-    >
-      <Image
-        source={{ uri: service.image }}
-        style={styles.serviceTypeImage}
-      />
-      <Text style={styles.serviceTypeText}>{service.name}</Text>
-    </TouchableOpacity>
-  );
-
-  const filterServicesByGender = (gender) => {
-    return services.filter((service) => service?.gender === gender);
+  const handlePress = (shopType) => {
+    navigation.navigate(shopType === "male" ? "maleshop" : "femaleShop");
   };
 
-  const renderSection = (title, gender) => (
-    <>
-      <Text style={styles.servicesHeader}>{title}</Text>
-      <FlatList
-        data={filterServicesByGender(gender)}
-        renderItem={({ item }) => renderServiceType(item)}
-        keyExtractor={(item) => item._id}
-        numColumns={3}
-        contentContainerStyle={styles.servicesGrid}
-      />
-    </>
+  const filteredShops = shops.filter((shop) =>
+    shop.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const ShopCard = ({ shop }) => {
+    return (
+      <TouchableOpacity onPress={() => handlePress(shop.type)}>
+        <View className="flex flex-col w-full h-[251px] shadow-lg mt-6">
+          <Image
+            source={shop.image}
+            className="w-full h-[183.8px] rounded-lg"
+          />
+          <View className="flex flex-col pt-2">
+            <Text className="text-[#8F90A6] font-bold text-[14px] leading-[16px]">
+              {shop.type === "male" ? "For Men" : "For Women"}
+            </Text>
+            <View>
+              <Text className="text-lg font-bold text-black">{shop.name}</Text>
+              <Text className="text-[#8F90A6] font-bold text-[14px] leading-[16px]">
+                {shop.services}
+              </Text>
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
       {/* Location */}
-      <View style={styles.locationContainer}>
-        <Text style={styles.locationText}>Munich Center</Text>
+      <View className="mt-20 mb-4 px-[16px] flex flex-row space-x-2">
+        <IonIcons name="location" size={24} />
+        <Text className="text-[20px]">Ho Chi Minh City</Text>
       </View>
-     
+
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <IonIcons name="search" size={20} style={styles.searchIcon} />
@@ -74,13 +89,16 @@ const HomeScreen = () => {
 
       {/* Scrollable FlatList */}
       <FlatList
-        data={[]}
-        renderItem={null}
+        data={filteredShops}
+        keyExtractor={(item) => item.id}
         ListFooterComponent={
-          <View style={styles.servicesContainer}>
-            {renderSection('All Genders', 'both')}
-            {renderSection('Male Services', 'male')}
-            {renderSection('Female Services', 'female')}
+          <View className="flex flex-col space-y-6 px-[16px] py-3">
+            <View>
+              <Text className="text-[20px] font-bold">Popular near you</Text>
+            </View>
+            {filteredShops.map((shop) => (
+              <ShopCard key={shop.id} shop={shop} />
+            ))}
           </View>
         }
         contentContainerStyle={{ flexGrow: 1 }}

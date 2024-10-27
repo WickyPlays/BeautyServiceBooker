@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
+import { useNavigation } from '@react-navigation/native';
 import { aget } from "../../commons/util_axios";
 import useAuthStore from "../../commons/authenStore";
 export default function BookingScreen() {
@@ -10,82 +11,88 @@ export default function BookingScreen() {
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const { user } = useAuthStore();
   const userId = user._id;
+  const navigation = useNavigation();
 
 
   const PastBookingItem = () => (
-    <View style={styles.bookingItem}>
-      <View style={styles.bookingHeader}>
-        <Text style={styles.bookingTitle}>Woodlands Hills Salon</Text>
-        <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)}>
-          <MaterialCommunityIcons
-            name={isFavorite ? "heart" : "heart-outline"}
-            size={24}
-            color={isFavorite ? "#FF0000" : "#007BFF"}
-          />
-        </TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('BookingDetailScreen')} style={styles.bookingItem}>
+      <View>
+        <View style={styles.bookingHeader}>
+          <Text style={styles.bookingTitle}>Woodlands Hills Salon</Text>
+          <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)}>
+            <MaterialCommunityIcons
+              name={isFavorite ? "heart" : "heart-outline"}
+              size={24}
+              color={isFavorite ? "#FF0000" : "red"}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.bookingDescription}>
+          <Text style={styles.descriptionText}>Keira throughway</Text>
+          <Text style={[styles.dot, styles.descriptionText]}>•</Text>
+          <Text style={styles.descriptionText}>5.0 Kms</Text>
+        </View>
+        <Text style={styles.descriptionText}>Haircut x 1 + Shave x 1</Text>
+        <View style={styles.bookingFooter}>
+          <Text style={styles.descriptionText}>8 Mar 2021</Text>
+          <Text style={[styles.dot, styles.descriptionText]}>•</Text>
+          <Text style={styles.descriptionText}>$102</Text>
+        </View>
+        <View style={styles.buttonRow_Past}>
+          <TouchableOpacity style={styles.reorderButton}>
+            <Text style={styles.reorderButtonText}>Reorder Booking</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.bookingDescription}>
-        <Text style={styles.descriptionText}>Keira throughway</Text>
-        <Text style={[styles.dot, styles.descriptionText]}>•</Text>
-        <Text style={styles.descriptionText}>5.0 Kms</Text>
-      </View>
-      <Text style={styles.descriptionText}>Haircut x 1 + Shave x 1</Text>
-      <View style={styles.bookingFooter}>
-        <Text style={styles.descriptionText}>8 Mar 2021</Text>
-        <Text style={[styles.dot, styles.descriptionText]}>•</Text>
-        <Text style={styles.descriptionText}>$102</Text>
-      </View>
-      <View style={styles.buttonRow_Past}>
-        <TouchableOpacity style={styles.reorderButton}>
-          <Text style={styles.reorderButtonText}>Reorder Booking</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const UpcomingBookingItem = () => (
-    <View style={styles.bookingItem}>
-      <View style={styles.bookingHeader}>
-        <Text style={styles.bookingTitle}>Woodlands Hills Salon</Text>
-        <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)}>
-          <MaterialCommunityIcons
-            name={isFavorite ? "heart" : "heart-outline"}
-            size={24}
-            color={isFavorite ? "#FF0000" : "#007BFF"}
-          />
-        </TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate('BookingDetailScreen')} style={styles.bookingItem}>
+      <View>
+        <View style={styles.bookingHeader}>
+          <Text style={styles.bookingTitle}>Woodlands Hills Salon</Text>
+          <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)}>
+            <MaterialCommunityIcons
+              name={isFavorite ? "heart" : "heart-outline"}
+              size={24}
+              color={isFavorite ? "#FF0000" : "red"}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.bookingDescription}>
+          <Text style={styles.descriptionText}>Keira throughway</Text>
+          <Text style={[styles.dot, styles.descriptionText]}>•</Text>
+          <Text style={styles.descriptionText}>5.0 Kms</Text>
+        </View>
+        <Text style={styles.descriptionText}>Haircut x 1 + Shave x 1</Text>
+        <View style={styles.bookingFooter}>
+          <Text style={styles.descriptionText}>8 Mar 2021</Text>
+          <Text style={[styles.dot, styles.descriptionText]}>•</Text>
+          <Text style={styles.descriptionText}>$102</Text>
+        </View>
+        <View style={styles.buttonRow_Upcoming}>
+          <TouchableOpacity onPress={() => alert("Cancel Booking pressed")}>
+            <Text style={styles.cancelButtonText}>Cancel Booking</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.reorderButton}>
+            <Text style={styles.reorderButtonText}>Reschedule Booking</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.bookingDescription}>
-        <Text style={styles.descriptionText}>Keira throughway</Text>
-        <Text style={[styles.dot, styles.descriptionText]}>•</Text>
-        <Text style={styles.descriptionText}>5.0 Kms</Text>
-      </View>
-      <Text style={styles.descriptionText}>Haircut x 1 + Shave x 1</Text>
-      <View style={styles.bookingFooter}>
-        <Text style={styles.descriptionText}>8 Mar 2021</Text>
-        <Text style={[styles.dot, styles.descriptionText]}>•</Text>
-        <Text style={styles.descriptionText}>$102</Text>
-      </View>
-      <View style={styles.buttonRow_Upcoming}>
-        <TouchableOpacity onPress={() => alert("Cancel Booking pressed")}>
-          <Text style={styles.cancelButtonText}>Cancel Booking</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.reorderButton}>
-          <Text style={styles.reorderButtonText}>Reschedule Booking</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const FavoritesBookingItem = () => (
-    <View style={styles.bookingItem}>
+    <TouchableOpacity onPress={() => navigation.navigate('BookingDetailScreen')} style={styles.bookingItem}>
+    <View>
       <View style={styles.bookingHeader}>
         <Text style={styles.bookingTitle}>Woodlands Hills Salon</Text>
         <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)}>
           <MaterialCommunityIcons
             name={isFavorite ? "heart-outline" : "heart"}
             size={24}
-            color={isFavorite ? "#FF0000" : "#007BFF"}
+            color={isFavorite ? "#FF0000" : "red"}
           />
         </TouchableOpacity>
       </View>
@@ -106,6 +113,7 @@ export default function BookingScreen() {
         </TouchableOpacity>
       </View>
     </View>
+    </TouchableOpacity>
   );
 
   return (

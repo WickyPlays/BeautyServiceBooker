@@ -20,37 +20,36 @@ export default function BookingScreen() {
   }, [userId, activeTab]);
 
 
-  const PastBookingItem = () => (
-	
-    <View style={styles.bookingItem}>
-      <View style={styles.bookingHeader}>
-        <Text style={styles.bookingTitle}>Woodlands Hills Salon</Text>
-        <TouchableOpacity onPress={() => setIsFavorite(!isFavorite)}>
-          <MaterialCommunityIcons
-            name={isFavorite ? "heart" : "heart-outline"}
-            size={24}
-            color={isFavorite ? "#FF0000" : "#007BFF"}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.bookingDescription}>
-        <Text style={styles.descriptionText}>Keira throughway</Text>
-        <Text style={[styles.dot, styles.descriptionText]}>•</Text>
-        <Text style={styles.descriptionText}>5.0 Kms</Text>
-      </View>
-      <Text style={styles.descriptionText}>Haircut x 1 + Shave x 1</Text>
-      <View style={styles.bookingFooter}>
-        <Text style={styles.descriptionText}>8 Mar 2021</Text>
-        <Text style={[styles.dot, styles.descriptionText]}>•</Text>
-        <Text style={styles.descriptionText}>$102</Text>
-      </View>
-      <View style={styles.buttonRow_Past}>
-        <TouchableOpacity style={styles.reorderButton}>
-          <Text style={styles.reorderButtonText}>Reorder Booking</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+	const PastBookingItem = () => (
+		<View style={styles.bookingItem}>
+			<View style={styles.bookingHeader}>
+				<Text style={styles.bookingTitle}>Woodlands Hills Salon</Text>
+				<TouchableOpacity onPress={() => setIsFavorite(!isFavorite)}>
+					<MaterialCommunityIcons
+						name={isFavorite ? 'heart' : 'heart-outline'}
+						size={24}
+						color={isFavorite ? '#FF0000' : '#007BFF'}
+					/>
+				</TouchableOpacity>
+			</View>
+			<View style={styles.bookingDescription}>
+				<Text style={styles.descriptionText}>Keira throughway</Text>
+				<Text style={[styles.dot, styles.descriptionText]}>•</Text>
+				<Text style={styles.descriptionText}>5.0 Kms</Text>
+			</View>
+			<Text style={styles.descriptionText}>Haircut x 1 + Shave x 1</Text>
+			<View style={styles.bookingFooter}>
+				<Text style={styles.descriptionText}>8 Mar 2021</Text>
+				<Text style={[styles.dot, styles.descriptionText]}>•</Text>
+				<Text style={styles.descriptionText}>$102</Text>
+			</View>
+			<View style={styles.buttonRow_Past}>
+				<TouchableOpacity style={styles.reorderButton}>
+					<Text style={styles.reorderButtonText}>Reorder Booking</Text>
+				</TouchableOpacity>
+			</View>
+		</View>
+	);
 
   const UpcomingBookingItem = () => (
     <View style={styles.bookingItem}>

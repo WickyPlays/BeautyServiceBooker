@@ -5,6 +5,7 @@ import SettingScreen from "../../screens/SettingsScreen/SettingsScreen";
 import SettingSavedAddress from "../../screens/SettingsScreen/SettingsSavedAddress";
 import BookingScreen from "../../screens/BookingScreen/BookingScreen";
 import ShopScreen from "../../screens/ShopScreen/ShopScreen";
+import BookingDetailScreen from "../../screens/BookingScreen/BookingDetailScreen";
 const Stack = createStackNavigator();
 
 // Stack for home page
@@ -49,6 +50,13 @@ const BookingStack = () => {
       <Stack.Screen
         name="Booking Screen"
         component={BookingScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="BookingDetailScreen" // Add BookingDetailScreen to the stack
+        component={BookingDetailScreen}
         options={{
           headerShown: false,
         }}

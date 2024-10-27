@@ -109,11 +109,6 @@ const menuItems = [
     subtitle: "Reorder your favorite service in a click",
   },
   {
-    icon: "card-outline",
-    title: "Payments",
-    subtitle: "Payment methods, Transaction History",
-  },
-  {
     icon: "location-outline",
     title: "Manage Address",
     redirect: "SettingsSavedAddress",
@@ -122,11 +117,6 @@ const menuItems = [
     icon: "notifications-outline",
     title: "Notifications",
     subtitle: "View your past notifications",
-  },
-  {
-    icon: "briefcase-outline",
-    title: "Register as partner",
-    subtitle: "Want to list your service? Register with us",
   },
   {
     icon: "information-circle-outline",

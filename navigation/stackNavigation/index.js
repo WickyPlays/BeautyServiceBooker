@@ -5,6 +5,7 @@ import SettingScreen from "../../screens/SettingsScreen/SettingsScreen";
 import SettingSavedAddress from "../../screens/SettingsScreen/SettingsSavedAddress";
 import BookingScreen from "../../screens/BookingScreen/BookingScreen";
 import ShopScreen from "../../screens/ShopScreen/ShopScreen";
+import FemaleScreen from "../../screens/ShopScreen/FemaleScreen";
 import BookingDetailScreen from "../../screens/BookingScreen/BookingDetailScreen";
 const Stack = createStackNavigator();
 
@@ -31,7 +32,7 @@ const HomeStack = () => (
     />
      <Stack.Screen
       name="femaleShop"
-      component={ShopScreen}
+      component={FemaleScreen}
       options={{
         headerShown: false,
       }}

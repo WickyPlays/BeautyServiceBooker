@@ -1,48 +1,102 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, RefreshControl, StyleSheet, TouchableOpacity, Image, SectionList, ScrollView, Share, Linking, FlatList } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, RefreshControl, StyleSheet, TouchableOpacity, Image, SectionList, Share, Linking, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from './ShopScreen.style';
 import { ImageBackground } from 'react-native';
+import { getServices } from '../../api/services'; // Import the API function
 
-const data = {
-  name: 'Woodlands Hills Salon',
-  banner: 'https://images.pexels.com/photos/3992876/pexels-photo-3992876.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
-  rating: 4.1,
-  ratingCount: '5k+',
-  distance: '5.0 Kms',
-  priceLevel: '$$',
-  address: 'Keira throughway',
-  servicesList: [
-    { id: '1', name: 'Haircut', price: '$40', duration: '40 Mins', imageUrl: 'https://randomuser.me/api/portraits/men/30.jpg' },
-    { id: '2', name: 'Body Massage', price: '$40', duration: '20 Mins', imageUrl: 'https://randomuser.me/api/portraits/men/32.jpg' },
-    { id: '3', name: 'Active Detox Cleanup', price: '$40', duration: '10 Mins', imageUrl: 'https://randomuser.me/api/portraits/men/27.jpg' },
-  ],
-  packagesList: [
-    { id: '1', name: 'Haircut & Shave', price: '$40', duration: '40 Mins', imageUrl: 'https://randomuser.me/api/portraits/men/25.jpg' },
-    { id: '2', name: 'Haircut & Beard Grooming', price: '$40', duration: '40 Mins', imageUrl: 'https://randomuser.me/api/portraits/men/24.jpg' },
-    { id: '3', name: 'Haircut & Anti-Pollution Cleanup', price: '$40', duration: '40 Mins', imageUrl: 'https://randomuser.me/api/portraits/men/23.jpg' },
-  ],
-  promoList: [
-    { id: '1', code: 'FREE50', discountPrice: '50% off' },
-    { id: '2', code: 'DEBIT60', discountPrice: '60% off on Debit Card' },
-  ],
-  tabs: [
-    { id: '1', title: 'Recommended' },
-    { id: '2', title: 'Packages' },
-    { id: '3', title: 'Face Care' },
-  ],
-};
-
-export default function ShopScreen({navigation}) {
-
+export default function ShopScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
+  const [selectedTab, setSelectedTab] = useState('all'); // Set default tab to "All"
+  const [services, setServices] = useState([]);
+  const [sections, setSections] = useState([]);
+  const [tabs, setTabs] = useState([
+    { id: 'all', title: 'All' }, // Add "All" tab
+    { id: 'barber', title: 'Barber' },
+    { id: 'facial', title: 'Facial' },
+    { id: 'massage', title: 'Massage' },
+    { id: 'hair care', title: 'Hair Care' },
+    { id: 'package', title: 'Package' },
+  ]);
+
+  // Static data
+  const salonData = {
+    name: 'Woodlands Hills Salon',
+    banner: 'https://images.pexels.com/photos/1813272/pexels-photo-1813272.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    rating: 4.1,
+    ratingCount: '5k+',
+    distance: '5.0 Kms',
+    priceLevel: '$$',
+    address: 'Keira throughway',
+  };
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  useEffect(() => {
+    if (selectedTab === 'all') {
+      groupServicesByType();
+    } else {
+      filterServices();
+    }
+  }, [selectedTab, services]);
+
+  const fetchServices = async () => {
+    try {
+      const response = await getServices();
+      if (Array.isArray(response.data)) {
+        const filteredServices = response.data.filter(service => service.gender === 'male' || service.gender === 'both');
+        setServices(filteredServices);
+      } else {
+        console.error('API response is not an array:', response.data);
+        setServices([]);
+      }
+    } catch (error) {
+      console.error('Error fetching services:', error.message);
+      if (error.response) {
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+      } else if (error.request) {
+        console.error('Request data:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
+      setServices([]); // Ensure services is always an array
+    }
+  };
+
+  const groupServicesByType = () => {
+    if (!Array.isArray(services)) {
+      console.error('Services is not an array:', services);
+      setSections([]);
+      return;
+    }
+
+    const groupedServices = tabs
+      .filter(tab => tab.id !== 'all')
+      .map(tab => ({
+        title: tab.title,
+        data: services.filter(service => service.type === tab.id),
+      }));
+
+    setSections(groupedServices);
+  };
+
+  const filterServices = () => {
+    if (!Array.isArray(services)) {
+      console.error('Services is not an array:', services);
+      setSections([]);
+      return;
+    }
+    const filtered = services.filter(service => service.type === selectedTab);
+    setSections([{ title: capitalizeFirstLetter(selectedTab), data: filtered }]);
+  };
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
+    fetchServices().finally(() => setRefreshing(false));
   }, []);
 
   const handleCall = () => {
@@ -59,22 +113,26 @@ export default function ShopScreen({navigation}) {
     }
   };
 
-  const handleSearch = () => {
-    navigation.navigate('SearchScreen');
-  }
+  const handleDirections = () => {
+    // Implement directions functionality here
+  };
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
 
   const renderServiceItem = ({ item }) => (
     <View style={styles.serviceItem}>
-      <Image source={{ uri: item.imageUrl }} style={styles.serviceImage} />
+      <Image source={{ uri: item.image }} style={styles.serviceImage} />
       <View style={styles.serviceInfo}>
         <Text style={styles.serviceTitle}>{item.name}</Text>
         <View style={styles.serviceDetails}>
           <Ionicons name="pricetag-outline" size={16} color="#000" />
-          <Text style={styles.serviceText}>{item.price}</Text>
+          <Text style={styles.serviceText}>${item.price}</Text>
         </View>
         <View style={styles.serviceDetails}>
           <Ionicons name="time-outline" size={16} color="#000" />
-          <Text style={styles.serviceText}>{item.duration}</Text>
+          <Text style={styles.serviceText}>{item.duration} mins</Text>
         </View>
       </View>
       <TouchableOpacity style={styles.selectButton}>
@@ -83,24 +141,14 @@ export default function ShopScreen({navigation}) {
     </View>
   );
 
-  const renderPromoItem = (promo) => (
-    <View style={styles.promoItem}>
-      <Text style={styles.promoCode}>{promo.code}</Text>
-      <Text style={styles.promoDiscount}>{promo.discountPrice}</Text>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       <SectionList
-        sections={[
-          { title: 'Recommended Services', data: data.servicesList },
-          { title: 'Packages', data: data.packagesList },
-        ]}
-        keyExtractor={(item) => item.id}
+        sections={sections}
+        keyExtractor={(item) => item._id}
         renderItem={renderServiceItem}
         renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.sectionTitle}>{title}</Text>
+          <Text style={styles.sectionTitle}>{capitalizeFirstLetter(title)}</Text>
         )}
         ListHeaderComponent={() => (
           <>
@@ -108,13 +156,13 @@ export default function ShopScreen({navigation}) {
             <View style={styles.header}>
               <ImageBackground
                 resizeMode="cover"
-                source={{ uri: data.banner }}
+                source={{ uri: salonData.banner }}
                 style={styles.headerImage}
               />
               <View style={styles.headerImageOverlay}>
                 <View style={styles.headerContent}>
-                  <Text style={styles.salonName}>{data.name}</Text>
-                  <Text style={styles.salonDetails}>{data.address} • {data.distance} • {data.priceLevel}</Text>
+                  <Text style={styles.salonName}>{salonData.name}</Text>
+                  <Text style={styles.salonDetails}>{salonData.address} • {salonData.distance} • {salonData.priceLevel}</Text>
                 </View>
               </View>
             </View>
@@ -126,7 +174,7 @@ export default function ShopScreen({navigation}) {
                   <Ionicons name="call-outline" size={24} color="black" />
                   <Text>Call</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.headerActionsButtons}>
+                <TouchableOpacity style={styles.headerActionsButtons} onPress={handleDirections}>
                   <Ionicons name="navigate-outline" size={24} color="black" />
                   <Text>Directions</Text>
                 </TouchableOpacity>
@@ -136,46 +184,36 @@ export default function ShopScreen({navigation}) {
                 </TouchableOpacity>
               </View>
               <View style={styles.ratingContainer}>
-                <Text style={styles.rating}>⭐ {data.rating}</Text>
-                <Text style={styles.ratingCount}>{data.ratingCount} ratings</Text>
+                <Text style={styles.rating}>⭐ {salonData.rating}</Text>
+                <Text style={styles.ratingCount}>{salonData.ratingCount} ratings</Text>
               </View>
             </View>
 
-            {/* Promo Section */}
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={data.promoList}
-              style={styles.promoList}
-              renderItem={({ item }) => renderPromoItem(item)}
-              keyExtractor={(item) => item.id}
-            />
+            {/* Draggable Tabs */}
+            <View style={styles.tabsContainer}>
+              <FlatList
+                data={tabs}
+                keyExtractor={(item) => item.id}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    key={item.id}
+                    style={[styles.tab, selectedTab === item.id && styles.tabActive]}
+                    onPress={() => setSelectedTab(item.id)}
+                  >
+                    <Text style={[styles.tabText, selectedTab === item.id && styles.tabTextActive]}>
+                      {capitalizeFirstLetter(item.title)}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
 
-            {/* Tabs Section */}
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={data.tabs}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.tab}>
-                  <Text style={styles.tabText}>{item.title}</Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item) => item.id}
-            />
           </>
         )}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
-
-
-      {scrollY > 100 && (
-        <View style={styles.fixedHeader}>
-          <Text></Text>
-          <Text style={styles.fixedHeaderTitle}>{data.name}</Text>
-          <Ionicons name="search" size={24} color="black" />
-        </View>
-      )}
     </View>
   );
 }

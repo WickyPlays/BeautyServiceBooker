@@ -7,7 +7,7 @@ export const CheckoutResultSuccessScreen = () => {
   const navigation = useNavigation();
 
   const goToHome = () => {
-    navigation.navigate('Booking Screen');
+    navigation.navigate('Booking', { screen: 'Booking Screen' });
   };
 
   return (

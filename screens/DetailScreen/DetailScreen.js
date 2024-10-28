@@ -41,7 +41,7 @@ export default function DetailScreen() {
 	}, []);
 
 	const checkUserLoggedIn = async () => {
-		//Check user logged in
+
 	};
 
 	const fetchData = useCallback(async () => {

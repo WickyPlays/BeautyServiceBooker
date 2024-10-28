@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,10 +11,11 @@ import {
   TextInput,
 } from "react-native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
-import { aget, apost, apatch, aupdate } from "../../commons/util_axios"; // Import apatch for PATCH requests
+import { aget, apost, apatch, aupdate, adelete } from "../../commons/util_axios";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import useAuthStore from "../../commons/authenStore";
+import { RefreshControl } from "react-native-gesture-handler";
 
 export default function BookingScreen() {
   const [activeTab, setActiveTab] = useState("Past");
@@ -30,65 +31,66 @@ export default function BookingScreen() {
   const { user } = useAuthStore();
   const userId = user._id;
 
-  useEffect(() => {
-    const fetchPastBookings = async () => {
-      try {
-        console.log(`Fetching past bookings for userId: ${userId}`);
-        const response = await aget(`/appointments/past/${userId}`);
-        setPastBookings(response.data);
-      } catch (error) {
-        console.error("Error fetching past bookings:", error);
-        if (error.response) {
-          console.error("Response data:", error.response.data);
-          console.error("Response status:", error.response.status);
-          console.error("Response headers:", error.response.headers);
-        }
-      }
-    };
+  const [refreshing, setRefreshing] = useState(false);
 
+  const fetchPastBookings = async () => {
+    console.log("Fetching past bookings for userId:", userId);
+    aget(`/appointments/past/${userId}`).then((response) => {
+      console.log(response.data)
+      setPastBookings(response.data);
+    }).catch((error) => {
+      console.error("Error fetching past bookings:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      }
+    });
+  };
+
+  const fetchUpcomingBookings = async () => {
+    try {
+      console.log(`Fetching upcoming bookings for userId: ${userId}`);
+      const response = await aget(`/appointments/up-coming/${userId}`);
+      setUpcomingBookings(response.data);
+    } catch (error) {
+      console.error("Error fetching upcoming bookings:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      }
+    }
+  };
+
+  const fetchFavoriteBookings = async () => {
+    try {
+      console.log(`Fetching favorite bookings for userId: ${userId}`);
+      const response = await aget(`/users/favorites/${userId}`);
+      setFavoriteBookings(response.data);
+    } catch (error) {
+      console.error("Error fetching favorite bookings:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      }
+    }
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    fetchPastBookings().then(() => setRefreshing(false));
+    fetchUpcomingBookings().then(() => setRefreshing(false));
+    fetchFavoriteBookings().then(() => setRefreshing(false));
+  }, []);
+
+  useEffect(() => {
     if (activeTab === "Past") {
       fetchPastBookings();
-    }
-  }, [activeTab, userId]);
-
-  useEffect(() => {
-    const fetchUpcomingBookings = async () => {
-      try {
-        console.log(`Fetching upcoming bookings for userId: ${userId}`);
-        const response = await aget(`/appointments/up-coming/${userId}`);
-        setUpcomingBookings(response.data);
-      } catch (error) {
-        console.error("Error fetching upcoming bookings:", error);
-        if (error.response) {
-          console.error("Response data:", error.response.data);
-          console.error("Response status:", error.response.status);
-          console.error("Response headers:", error.response.headers);
-        }
-      }
-    };
-
-    if (activeTab === "Upcoming") {
+    } else if (activeTab === "Upcoming") {
       fetchUpcomingBookings();
-    }
-  }, [activeTab, userId]);
-
-  useEffect(() => {
-    const fetchFavoriteBookings = async () => {
-      try {
-        console.log(`Fetching favorite bookings for userId: ${userId}`);
-        const response = await aget(`/appointments/favorites/${userId}`);
-        setFavoriteBookings(response.data);
-      } catch (error) {
-        console.error("Error fetching favorite bookings:", error);
-        if (error.response) {
-          console.error("Response data:", error.response.data);
-          console.error("Response status:", error.response.status);
-          console.error("Response headers:", error.response.headers);
-        }
-      }
-    };
-
-    if (activeTab === "Favorites") {
+    } else if (activeTab === "Favorites") {
       fetchFavoriteBookings();
     }
   }, [activeTab, userId]);
@@ -97,9 +99,9 @@ export default function BookingScreen() {
   const handleFavoriteToggle = async (appointmentId, isFavorite) => {
     try {
       if (isFavorite) {
-        await apost(`/appointments/${userId}/remove-favorite/${appointmentId}`);
+        await adelete(`/users/${userId}/remove-favorite/${appointmentId}`);
       } else {
-        await apost(`/appointments/${userId}/add-favorite/${appointmentId}`);
+        await apost(`/users/${userId}/add-favorite/${appointmentId}`);
       }
       setPastBookings((prevBookings) =>
         prevBookings.map((booking) =>
@@ -410,7 +412,9 @@ export default function BookingScreen() {
   );
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container}  refreshControl={
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+    }>
       <View style={styles.navbar}>
         <Text style={styles.navbarTitle}>Your Bookings</Text>
         <View style={styles.tabs}>

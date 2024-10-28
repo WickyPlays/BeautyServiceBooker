@@ -135,7 +135,7 @@ export default function ShopScreen({ navigation }) {
           <Text style={styles.serviceText}>{item.duration} mins</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.selectButton}>
+      <TouchableOpacity style={styles.selectButton} onPress={() => navigation.navigate('Detail', { itemId: item._id })}>
         <Text style={styles.selectText}>Select</Text>
       </TouchableOpacity>
     </View>

@@ -20,7 +20,7 @@ const TabNavigation = () => {
         }}
       >
         <Tab.Screen
-          name="HomeScreen"
+          name="Home"
           component={HomeStack}
           options={{
             headerShown: false,

@@ -153,12 +153,19 @@ export default function ShopScreen({ navigation }) {
         ListHeaderComponent={() => (
           <>
             {/* Header Section */}
+
             <View style={styles.header}>
               <ImageBackground
                 resizeMode="cover"
                 source={{ uri: salonData.banner }}
                 style={styles.headerImage}
               />
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.goBack()}
+              >
+                <Ionicons name="arrow-back" size={23} color="black" />
+              </TouchableOpacity>
               <View style={styles.headerImageOverlay}>
                 <View style={styles.headerContent}>
                   <Text style={styles.salonName}>{salonData.name}</Text>

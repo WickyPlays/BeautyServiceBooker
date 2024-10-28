@@ -9,6 +9,7 @@ import {
 	ToastAndroid,
 	Share,
 	TouchableOpacity,
+	Alert,
 } from "react-native";
 import {
 	useRoute,
@@ -20,6 +21,7 @@ import { Divider, Avatar } from "react-native-elements";
 import { styles } from "./DetailScreen.style";
 import { aget, apost } from "../../commons/util_axios";
 import { renderStars } from "../../commons/common_style";
+import { addServiceId, getServiceIds, removeServiceId, hasServiceId } from "../../commons/checkoutStore";
 
 export default function DetailScreen() {
 	const [refreshing, setRefreshing] = useState(false);
@@ -31,6 +33,8 @@ export default function DetailScreen() {
 	const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 	const [showFixedHeader, setShowFixedHeader] = useState(false);
 	const [isWishlist, setIsWishlist] = useState(false);
+
+	const [isBooked, setIsBooked] = useState(false);
 
 	const route = useRoute();
 	const navigation = useNavigation();
@@ -75,6 +79,9 @@ export default function DetailScreen() {
 			setComments(tempComments);
 			setFilteredComments(tempComments);
 
+			let hasBooked = await hasServiceId(itemId);
+			setIsBooked(hasBooked);
+
 			await checkUserLoggedIn();
 		} catch (error) {
 			console.error(error);
@@ -90,6 +97,42 @@ export default function DetailScreen() {
 			setShowFixedHeader(true);
 		} else {
 			setShowFixedHeader(false);
+		}
+	};
+
+	const handleBookService = async () => {
+		if (isBooked) {
+			navigation.navigate("Checkout");
+		} else {
+			await addServiceId(itemId);
+			setIsBooked(true);
+		}
+	};
+
+	const handleCancelBookService = async () => {
+	
+		const cancelButtonPressed = await new Promise((resolve, reject) => {
+			Alert.alert(
+				"Cancel Booking",
+				"Are you sure you want to cancel your booking?",
+				[
+					{
+						text: "No",
+						onPress: () => resolve(false),
+						style: "cancel",
+					},
+					{
+						text: "Yes",
+						onPress: () => resolve(true),
+					},
+				],
+				{ cancelable: false }
+			);
+		});
+
+		if (cancelButtonPressed) {
+			await removeServiceId(itemId);
+			setIsBooked(false);
 		}
 	};
 
@@ -261,13 +304,13 @@ export default function DetailScreen() {
 					</View>
 
 					<View style={styles.itemTool}>
-						<TouchableOpacity onPress={toggleWishlist}>
+						{/* <TouchableOpacity onPress={toggleWishlist}>
 							<Ionicons
 								name={isWishlist ? "heart" : "heart-outline"}
 								size={32}
 								color={isWishlist ? "red" : "black"}
 							/>
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 						<TouchableOpacity style={{ marginLeft: 16 }} onPress={onShare}>
 							<Ionicons name="share-social-outline" size={32} color="black" />
 						</TouchableOpacity>
@@ -325,15 +368,38 @@ export default function DetailScreen() {
 			</ScrollView>
 
 			<View style={styles.bottomContainer}>
-				<TouchableOpacity
-					style={styles.bookButton}
-					onPress={() => navigation.navigate("Booking")}
-				>
-					<Ionicons name="calendar-outline" size={20} color="white" />
-					<Text style={styles.bookText}>Book this service</Text>
-				</TouchableOpacity>
+				{
+					isBooked ? (
+						<View style={styles.bookedContainer}>
+							<TouchableOpacity
+								style={styles.bookButtonCancel}
+								onPress={handleCancelBookService}
+							>
+								<Ionicons name="calendar-outline" size={20} color="white" />
+								<Text style={styles.bookText}>Cancel</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={styles.bookButtonExist}
+								onPress={handleBookService}
+							>
+								<Ionicons name="calendar-outline" size={20} color="white" />
+								<Text style={styles.bookText}>User has booked this service</Text>
+							</TouchableOpacity>
+						</View>
+					) : (
+						<TouchableOpacity
+							style={styles.bookButton}
+							onPress={handleBookService}
+						>
+							<Ionicons name="calendar-outline" size={20} color="white" />
+							<Text style={styles.bookText}>Book this service</Text>
+						</TouchableOpacity>
+					)
+				}
+
 			</View>
+
 		</View>
 	);
-}
+};
 

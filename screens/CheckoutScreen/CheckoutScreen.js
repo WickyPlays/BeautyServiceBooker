@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Text, View, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Alert } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { styles } from './CheckoutScreen.style';
-import { getServiceDateId, getServiceIds } from '../../commons/checkoutStore';
+import { clearServiceIds, getServiceDateId, getServiceIds, removeServiceDateId } from '../../commons/checkoutStore';
 import { aget, apost } from '../../commons/util_axios';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
@@ -64,7 +64,11 @@ export default function CheckoutScreen() {
                 serviceID: services.map(service => service._id),
                 stylistID: selectedStylist,
                 appointmentDate: date
-            }).then(() => navigation.navigate('CheckoutResultSuccess'));
+            }).then(async () => {
+                await removeServiceDateId();
+                await clearServiceIds();
+                navigation.navigate('CheckoutResultSuccess')
+            });
         } catch (error) {
             console.error("Error creating appointment:", error);
             Alert.alert("Error", "Could not create appointment. Please try again.");

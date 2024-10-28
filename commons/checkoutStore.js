@@ -33,6 +33,14 @@ export const removeServiceId = async (serviceId) => {
     }
 };
 
+export const clearServiceIds = async () => {
+    try {
+        await AsyncStorage.removeItem(SERVICE_ID);
+    } catch (error) {
+        console.error("Error clearing serviceIds from AsyncStorage:", error);
+    }
+};
+
 export const hasServiceId = async (serviceId) => {
     try {
         const serviceIds = await getServiceIds();

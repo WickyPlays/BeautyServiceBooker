@@ -11,6 +11,7 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import useAuthStore from "../../commons/authenStore";
 import useNavigationStore from "../../navigationRef";
+import CryptoJS from "crypto-js";
 const refreshTimeout = 2000;
 
 export default function SettingsScreen({ navigation }) {
@@ -38,23 +39,28 @@ export default function SettingsScreen({ navigation }) {
   );
 }
 
-const ProfileSection = ({ user }) => (
-  <View style={styles.profileContainer}>
-    <Image
-      source={{ uri: "https://randomuser.me/api/portraits/men/32.jpg" }}
-      style={styles.profileImage}
-    />
-    <View style={styles.profileInfo}>
-      <Text style={styles.profileName}>{user.name}</Text>
-      <Text style={styles.profileContact}>
-        {user.phone} · {user.email}
-      </Text>
-      <TouchableOpacity>
-        <Text style={styles.editText}>Edit</Text>
-      </TouchableOpacity>
+const ProfileSection = ({ user }) => {
+  const emailHash = CryptoJS.SHA256(user.email.toLowerCase()).toString();
+  const uri = `https://www.gravatar.com/avatar/${emailHash}?d=identicon`;
+
+  return (
+    <View style={styles.profileContainer}>
+      <Image
+        source={{ uri }}
+        style={styles.profileImage}
+      />
+      <View style={styles.profileInfo}>
+        <Text style={styles.profileName}>{user.name}</Text>
+        <Text style={styles.profileContact}>
+          {user.phone} · {user.email}
+        </Text>
+        <TouchableOpacity>
+          <Text style={styles.editText}>Edit</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const MenuSection = ({ navigation }) => (
   <View style={styles.menuContainer}>

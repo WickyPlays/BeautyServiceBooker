@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderWidth: 1,
     marginHorizontal: 5,
-    maxHeight: 40,
+    maxHeight: 60,
   },
   dayText: {
     fontSize: 14,

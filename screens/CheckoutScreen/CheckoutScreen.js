@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, RefreshControl, StyleSheet } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Text, View, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Alert } from 'react-native';
+import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { styles } from './CheckoutScreen.style';
-import { getServiceIds } from '../../commons/checkoutStore';
-import { aget } from '../../commons/util_axios';
-import { useNavigation } from '@react-navigation/native';
+import { clearServiceIds, getServiceDateId, getServiceIds, removeServiceDateId } from '../../commons/checkoutStore';
+import { aget, apost } from '../../commons/util_axios';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import moment from 'moment';
+import useAuthStore from '../../commons/authenStore';
+import { Picker } from '@react-native-picker/picker';
 
 export default function CheckoutScreen() {
 
+    const { user } = useAuthStore();
     const navigation = useNavigation();
     const [services, setServices] = useState([]);
+    const [stylists, setStylists] = useState([]);
+    const [selectedStylist, setSelectedStylist] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
+    const [date, setDate] = useState(null);
 
     const fetchServices = async () => {
         try {
@@ -21,31 +27,59 @@ export default function CheckoutScreen() {
         } catch (error) {
             console.error("Error fetching service data:", error);
         }
+
+        let date = await getServiceDateId();
+        setDate(date);
     };
 
-    // Refresh handler
-    const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        fetchServices().then(() => setRefreshing(false));
-    }, []);
+    // Fetch stylists
+    const fetchStylists = async () => {
+        try {
+            const response = await aget('/users/stylists');
+            setStylists(response.data);
+        } catch (error) {
+            console.error("Error fetching stylists:", error);
+        }
+    };
 
     useEffect(() => {
         fetchServices();
+        fetchStylists();
     }, []);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        Promise.all([fetchServices(), fetchStylists()]).then(() => setRefreshing(false));
+    }, []);
+
+    const handleCreateAppointment = async () => {
+        if (!date || !selectedStylist || services.length === 0) {
+            Alert.alert("Incomplete Information", "Please select a service, stylist, and date.");
+            return;
+        }
+
+        try {
+            await apost('/appointments/create-appointment', {
+                userID: user._id,
+                serviceID: services.map(service => service._id),
+                stylistID: selectedStylist,
+                appointmentDate: date
+            }).then(async () => {
+                await removeServiceDateId();
+                await clearServiceIds();
+                navigation.navigate('CheckoutResultSuccess')
+            });
+        } catch (error) {
+            console.error("Error creating appointment:", error);
+            Alert.alert("Error", "Could not create appointment. Please try again.");
+        }
+    };
 
     return (
         <ScrollView
             style={styles.container}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={{ padding: 8, }}>
-                    <FontAwesome name="arrow-left" size={24} color="black" />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>Checkout</Text>
-                <View style={{ width: 24 }} />
-            </View>
-
             <View style={styles.section}>
                 <Text style={styles.title}>Woodlands Hills Salon</Text>
                 <View style={styles.row}>
@@ -55,15 +89,20 @@ export default function CheckoutScreen() {
             </View>
 
             <View style={styles.section}>
-                <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('CheckoutDate')}>
+                <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Checkout Date')}>
                     <MaterialIcons name="calendar-today" size={24} color="black" />
                     <Text style={styles.rowText}>Select Date & Time</Text>
                     <FontAwesome name="chevron-right" size={24} color="black" style={{ marginLeft: 'auto' }} />
                 </TouchableOpacity>
             </View>
 
+            <View style={styles.appointmentDate}>
+                <Ionicons name="timer-outline" size={24} color="black" />
+                <Text style={{ marginLeft: 10 }}>Appointment date: {date ? moment(date).format('MMMM Do, YYYY') : ''}</Text>
+            </View>
+
             {/* Dynamically render each service */}
-            {services.map((service, index) => (
+            {services.map((service) => (
                 <View key={service._id} style={styles.section}>
                     <View style={styles.itemRow}>
                         <View>
@@ -73,6 +112,26 @@ export default function CheckoutScreen() {
                     </View>
                 </View>
             ))}
+
+            {/* Stylist selection */}
+            <View style={styles.section}>
+                <Text style={styles.title}>Select Stylist</Text>
+                <Picker
+                    selectedValue={selectedStylist}
+                    onValueChange={(itemValue, itemIndex) => setSelectedStylist(itemValue)}
+                    style={{ width: '100%' }}
+                >
+                    <Picker.Item label="Select a Stylist" value={null} />
+                    {stylists.map((stylist) => (
+                        <Picker.Item
+                            key={stylist._id}
+                            // label={`${stylist.name} (Loyalty Points: ${stylist.loyaltyPoints})`}
+                            label={`${stylist.name}`}
+                            value={stylist._id}
+                        />
+                    ))}
+                </Picker>
+            </View>
 
             <View style={styles.section}>
                 <View style={styles.row}>
@@ -84,15 +143,15 @@ export default function CheckoutScreen() {
 
             <View style={styles.section}>
                 <View style={styles.row}>
-                    <Text>Item total</Text>
+                    <Text>Item total: </Text>
                     <Text>${services.reduce((total, service) => total + service.price, 0)}</Text>
                 </View>
                 <View style={styles.row}>
-                    <Text style={styles.discountText}>Coupon Discount</Text>
+                    <Text style={styles.discountText}>Coupon Discount: </Text>
                     <Text style={styles.discountText}>-$10</Text>
                 </View>
-                <View style={styles.row}>
-                    <Text style={styles.amountPayableText}>Amount Payable</Text>
+                <View style={[styles.row, styles.lastRow]}>
+                    <Text style={styles.amountPayableText}>Amount Payable: </Text>
                     <Text style={styles.amountPayableText}>${services.reduce((total, service) => total + service.price, 0) - 10}</Text>
                 </View>
             </View>
@@ -107,8 +166,14 @@ export default function CheckoutScreen() {
                         <Text style={styles.taxText}>+ tax included</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.totalButton}>
-                    <Text style={styles.totalButtonText}>Select Date & Time</Text>
+
+                <TouchableOpacity
+                    style={styles.totalButton}
+                    onPress={handleCreateAppointment}
+                >
+                    <Text style={styles.totalButtonText}>
+                        {date && selectedStylist ? "Confirm appointment" : "Select Date & Stylist"}
+                    </Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>

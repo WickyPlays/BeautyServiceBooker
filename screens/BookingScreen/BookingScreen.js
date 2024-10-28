@@ -159,12 +159,11 @@ export default function BookingScreen() {
         selectedDate.getMonth(),
         selectedDate.getDate(),
         selectedTime.getHours(),
-        selectedTime.getMinutes() // Ensure minutes are included
+        selectedTime.getMinutes()
       );
       const newDateTimeISO = newDateTime.toISOString();
-      console.log("Rescheduling to:", newDateTimeISO); // Log the newDateTime in ISO format
+      console.log("Rescheduling to:", newDateTimeISO);
 
-      // Log the request payload
       const payload = { appointmentDate: newDateTimeISO };
       console.log("Request payload:", payload);
 

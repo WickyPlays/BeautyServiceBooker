@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F9FAFB',
         padding: 16,
-        marginTop: 40
+        paddingBottom: 40
     },
     header: {
         flexDirection: 'row',
@@ -18,7 +18,6 @@ export const styles = StyleSheet.create({
         fontWeight: '600',
     },
     section: {
-        marginTop: 16,
         backgroundColor: '#FFFFFF',
         padding: 16,
         borderRadius: 8,
@@ -35,6 +34,24 @@ export const styles = StyleSheet.create({
     rowText: {
         marginLeft: 8,
         fontSize: 16,
+    },
+    discountText: {
+        color: '#ff4d4f',
+        fontWeight: '500',
+    },
+    amountPayableText: {
+        fontWeight: '700',
+        fontSize: 16,
+        color: '#333',
+    },
+    appointmentDate: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#e7c6ff',
+        borderColor: '#b54eff',
+        borderWidth: 2,
+        borderRadius: 8,
+        padding: 5
     },
     priceText: {
         color: '#6B7280',

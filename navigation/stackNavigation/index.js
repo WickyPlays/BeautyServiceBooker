@@ -7,6 +7,11 @@ import BookingScreen from "../../screens/BookingScreen/BookingScreen";
 import ShopScreen from "../../screens/ShopScreen/ShopScreen";
 import FemaleScreen from "../../screens/ShopScreen/FemaleScreen";
 import BookingDetailScreen from "../../screens/BookingScreen/BookingDetailScreen";
+import DetailScreen from "../../screens/DetailScreen/DetailScreen";
+import CheckoutScreen from "../../screens/CheckoutScreen/CheckoutScreen";
+import { CheckoutDateScreen } from "../../screens/CheckoutScreen/CheckoutDateScreen";
+import CheckoutResultFailedScreen from "../../screens/CheckoutScreen/CheckoutResultFailedScreen";
+import { CheckoutResultSuccessScreen } from "../../screens/CheckoutScreen/CheckoutResultSuccessScreen";
 const Stack = createStackNavigator();
 
 // Stack for home page
@@ -30,13 +35,50 @@ const HomeStack = () => (
         headerShown: false,
       }}
     />
-     <Stack.Screen
+    <Stack.Screen
       name="femaleShop"
       component={FemaleScreen}
       options={{
         headerShown: false,
       }}
     />
+    <Stack.Screen
+      name="Detail"
+      component={DetailScreen}
+      options={{
+        headerShown: false,
+        
+      }}
+    />
+     <Stack.Screen
+        name="Checkout"
+        component={CheckoutScreen}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="Checkout Date"
+        component={CheckoutDateScreen}
+        options={{
+          headerShown: true
+        }}
+      />
+      <Stack.Screen
+        name="CheckoutResultSuccess"
+        component={CheckoutResultSuccessScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="CheckoutResultFailed"
+        component={CheckoutResultFailedScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
   </Stack.Navigator>
 );
 
@@ -56,7 +98,7 @@ const BookingStack = () => {
         }}
       />
       <Stack.Screen
-        name="BookingDetailScreen" // Add BookingDetailScreen to the stack
+        name="BookingDetailScreen"
         component={BookingDetailScreen}
         options={{
           headerShown: false,

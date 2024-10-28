@@ -11,6 +11,8 @@ import IntroScreen from "./screens/IntroScreen/IntroScreen";
 import DetailScreen from "./screens/DetailScreen/DetailScreen";
 import CheckoutScreen from "./screens/CheckoutScreen/CheckoutScreen";
 import { CheckoutDateScreen } from "./screens/CheckoutScreen/CheckoutDateScreen";
+import { CheckoutResultSuccessScreen } from "./screens/CheckoutScreen/CheckoutResultSuccessScreen";
+import CheckoutResultFailedScreen from "./screens/CheckoutScreen/CheckoutResultFailedScreen";
 
 const Stack = createStackNavigator();
 
@@ -52,27 +54,6 @@ export default function App() {
                   name="Main"
                   component={TabNavigation}
                   options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="Detail"
-                  component={DetailScreen}
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="Checkout"
-                  component={CheckoutScreen}
-                  options={{
-                    headerShown: false,
-                  }}
-                />
-                <Stack.Screen
-                  name="CheckoutDate"
-                  component={CheckoutDateScreen}
-                  options={{
-                    headerShown: false
-                  }}
                 />
               </>
             )}

@@ -11,7 +11,13 @@ import {
   TextInput,
 } from "react-native";
 import { MaterialCommunityIcons } from "react-native-vector-icons";
-import { aget, apost, apatch, aupdate, adelete } from "../../commons/util_axios";
+import {
+  aget,
+  apost,
+  apatch,
+  aupdate,
+  adelete,
+} from "../../commons/util_axios";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import useAuthStore from "../../commons/authenStore";
@@ -35,17 +41,14 @@ export default function BookingScreen() {
 
   const fetchPastBookings = async () => {
     console.log("Fetching past bookings for userId:", userId);
-    aget(`/appointments/past/${userId}`).then((response) => {
-      console.log(response.data)
-      setPastBookings(response.data);
-    }).catch((error) => {
-      console.error("Error fetching past bookings:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      }
-    });
+    aget(`/appointments/past/${userId}`)
+      .then((response) => {
+        console.log(response.data);
+        setPastBookings(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching past bookings:", error);
+      });
   };
 
   const fetchUpcomingBookings = async () => {
@@ -55,26 +58,16 @@ export default function BookingScreen() {
       setUpcomingBookings(response.data);
     } catch (error) {
       console.error("Error fetching upcoming bookings:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      }
     }
   };
 
   const fetchFavoriteBookings = async () => {
     try {
       console.log(`Fetching favorite bookings for userId: ${userId}`);
-      const response = await aget(`/users/favorites/${userId}`);
+      const response = await aget(`/appointments/favorites/${userId}`);
       setFavoriteBookings(response.data);
     } catch (error) {
       console.error("Error fetching favorite bookings:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      }
     }
   };
 
@@ -95,13 +88,12 @@ export default function BookingScreen() {
     }
   }, [activeTab, userId]);
 
-  
   const handleFavoriteToggle = async (appointmentId, isFavorite) => {
     try {
       if (isFavorite) {
-        await adelete(`/users/${userId}/remove-favorite/${appointmentId}`);
+        await apost(`/appointments/${userId}/remove-favorite/${appointmentId}`);
       } else {
-        await apost(`/users/${userId}/add-favorite/${appointmentId}`);
+        await apost(`/appointments/${userId}/add-favorite/${appointmentId}`);
       }
       setPastBookings((prevBookings) =>
         prevBookings.map((booking) =>
@@ -171,11 +163,11 @@ export default function BookingScreen() {
       );
       const newDateTimeISO = newDateTime.toISOString();
       console.log("Rescheduling to:", newDateTimeISO); // Log the newDateTime in ISO format
-  
+
       // Log the request payload
       const payload = { appointmentDate: newDateTimeISO };
       console.log("Request payload:", payload);
-  
+
       // Ensure the correct Content-Type header is set
       await apatch(`/appointments/reschedule/${appointmentId}`, payload, {
         headers: {
@@ -186,11 +178,6 @@ export default function BookingScreen() {
       // Update bookings if necessary
     } catch (error) {
       console.error("Error rescheduling booking:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      }
     }
   };
 
@@ -412,9 +399,12 @@ export default function BookingScreen() {
   );
 
   return (
-    <ScrollView style={styles.container}  refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-    }>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={styles.navbar}>
         <Text style={styles.navbarTitle}>Your Bookings</Text>
         <View style={styles.tabs}>

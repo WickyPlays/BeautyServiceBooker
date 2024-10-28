@@ -24,7 +24,7 @@ import useAuthStore from "../../commons/authenStore";
 import { RefreshControl } from "react-native-gesture-handler";
 
 export default function BookingScreen() {
-  const [activeTab, setActiveTab] = useState("Past");
+  const [activeTab, setActiveTab] = useState("Upcoming");
   const [pastBookings, setPastBookings] = useState([]);
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [favoriteBookings, setFavoriteBookings] = useState([]);

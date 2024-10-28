@@ -225,4 +225,33 @@ export const styles = StyleSheet.create({
   bookText: {
     color: '#fff',
   },
+
+  bookedContainer: {
+    flexDirection: 'row',
+    gap: 10
+  },
+
+  bookButtonCancel: {
+    backgroundColor: '#ff0000',
+    color: '#fff',
+    flexGrow: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5,
+    paddingVertical: 10,
+    gap: 5,
+    borderRadius: 6
+  },
+
+  bookButtonExist: {
+    backgroundColor: '#ab9100',
+    color: '#000000',
+    flexGrow: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5,
+    paddingVertical: 10,
+    gap: 5,
+    borderRadius: 6
+  }
 });

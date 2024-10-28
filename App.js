@@ -9,6 +9,8 @@ import { navigationRef } from "./navigationRef";
 import SplashScreen from "./screens/SplashScreen/SplashScreen";
 import IntroScreen from "./screens/IntroScreen/IntroScreen";
 import DetailScreen from "./screens/DetailScreen/DetailScreen";
+import CheckoutScreen from "./screens/CheckoutScreen/CheckoutScreen";
+import { CheckoutDateScreen } from "./screens/CheckoutScreen/CheckoutDateScreen";
 
 const Stack = createStackNavigator();
 
@@ -20,7 +22,7 @@ const CheckAuthProvider = ({ children }) => {
     initializeAuth();
     setTimeout(() => {
       setIsLoading(false);
-    }, 2000); // Simulate loading time
+    }, 2000);
   }, [initializeAuth]);
 
   if (isLoading) {
@@ -56,6 +58,20 @@ export default function App() {
                   component={DetailScreen}
                   options={{
                     headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Checkout"
+                  component={CheckoutScreen}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="CheckoutDate"
+                  component={CheckoutDateScreen}
+                  options={{
+                    headerShown: false
                   }}
                 />
               </>

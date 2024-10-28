@@ -5,6 +5,16 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f8f8f8',
   },
+  backButton: {
+    position: "absolute",
+    top: 0,
+    left: 10,
+    marginTop: 30,
+    zIndex: 10,
+    padding: 10,
+    borderRadius: 25,
+    backgroundColor: "#fff",
+  },
   header: {
     height: 200,
     backgroundColor: '#ddd',

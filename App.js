@@ -13,6 +13,7 @@ import CheckoutScreen from "./screens/CheckoutScreen/CheckoutScreen";
 import CheckoutResultFailedScreen from "./screens/CheckoutScreen/CheckoutResultFailedScreen";
 import { CheckoutResultSuccessScreen } from "./screens/CheckoutScreen/CheckoutResultSuccessScreen";
 import { CheckoutDateScreen } from "./screens/CheckoutScreen/CheckoutDateScreen";
+import * as Linking from 'expo-linking';
 
 const Stack = createStackNavigator();
 
@@ -34,9 +35,19 @@ const CheckAuthProvider = ({ children }) => {
   return children(isAuthenticated);
 };
 
+const linking = {
+  prefixes: ["beautyservicebooker://"],
+  config: {
+    screens: {
+      success: "CheckoutResultSuccess",
+      failed: "CheckoutResultFailed",
+    },
+  },
+};
+
 export default function App() {
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer ref={navigationRef} linking={linking}>
       <CheckAuthProvider>
         {(isAuthenticated) => (
           <Stack.Navigator>

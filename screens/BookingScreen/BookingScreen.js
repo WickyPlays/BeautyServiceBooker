@@ -5,7 +5,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import useAuthStore from "../../commons/authenStore";
 import { styles } from "./BookingScreen.style";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useNavigation } from "@react-navigation/native";
 import UpcomingBookingItem from "./Items/UpcomingBookingItem";
 import PastBookingItem from "./Items/PastBookingItem";
 import FavoritesBookingItem from "./Items/FavoritesBookingItem";
@@ -22,6 +22,7 @@ export default function BookingScreen() {
   const [refreshing, setRefreshing] = useState(false);
 
   const route = useRoute();
+  const navigation = useNavigation(); // Use useNavigation hook
   const { user } = useAuthStore();
   const userId = user._id;
 
@@ -135,15 +136,13 @@ export default function BookingScreen() {
     setTimePickerVisibility(false);
   };
 
-  useEffect(() => {
-    
-  }, [bookings]);
+  const handleServiceItemPress = (itemId) => {
+    console.log(itemId)
+    navigation.navigate("Home", { screen: "Detail", params: { itemId: itemId } });
+  };
 
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-    >
+    <View style={styles.container}>
       <View style={styles.navbar}>
         <Text style={styles.navbarTitle}>Your Bookings</Text>
         <View style={styles.tabs}>
@@ -158,30 +157,38 @@ export default function BookingScreen() {
           ))}
         </View>
       </View>
-      <View style={styles.content}>
-        {activeTab === "Past" && (
-          <PastBookingItem bookings={bookings.past} handleFavoriteToggle={handleFavoriteToggle} />
-        )}
-        {activeTab === "Upcoming" && (
-          <UpcomingBookingItem
-            bookings={bookings.upcoming}
-            handleFavoriteToggle={handleFavoriteToggle}
-            handleCancelBooking={handleCancelBooking}
-            openRescheduleModal={openRescheduleModal}
-          />
-        )}
-        {activeTab === "Favorites" && (
-          <FavoritesBookingItem bookings={bookings.favorites} handleFavoriteToggle={handleFavoriteToggle} />
-        )}
-      </View>
+
+      <ScrollView
+        style={styles.scrollView}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
+        <View style={styles.content}>
+          {activeTab === "Past" && (
+            <PastBookingItem bookings={bookings.past} handleFavoriteToggle={handleFavoriteToggle} handleServiceItemPress={handleServiceItemPress} />
+          )}
+          {activeTab === "Upcoming" && (
+            <UpcomingBookingItem
+              bookings={bookings.upcoming}
+              handleFavoriteToggle={handleFavoriteToggle}
+              handleCancelBooking={handleCancelBooking}
+              openRescheduleModal={openRescheduleModal}
+              handleServiceItemPress={handleServiceItemPress}
+            />
+          )}
+          {activeTab === "Favorites" && (
+            <FavoritesBookingItem bookings={bookings.favorites} handleFavoriteToggle={handleFavoriteToggle} handleServiceItemPress={handleServiceItemPress} />
+          )}
+        </View>
+      </ScrollView>
+
       <Modal visible={isModalVisible} transparent animationType="slide" onRequestClose={() => setIsModalVisible(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Reschedule Booking</Text>
             {selectedBooking && (
               <>
-                <Text style={styles.modalText}>Appointment with {selectedBooking.stylistName}</Text>
-                <Text style={styles.modalText}>Current Date: {new Date(selectedBooking.appointmentDate).toLocaleDateString()}</Text>
+                <Text style={[styles.modalText, { color: 'black' }]}>Appointment with {selectedBooking.stylistName}</Text> {/* Set color to black */}
+                <Text style={[styles.modalText, { color: 'black' }]}>Current Date: {new Date(selectedBooking.appointmentDate).toLocaleDateString()}</Text> {/* Set color to black */}
                 <TouchableOpacity onPress={() => setDatePickerVisibility(true)} style={styles.datePickerButton}>
                   <Text style={styles.datePickerButtonText}>Choose New Date</Text>
                 </TouchableOpacity>
@@ -213,6 +220,6 @@ export default function BookingScreen() {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </View>
   );
 }

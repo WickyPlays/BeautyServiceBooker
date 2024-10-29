@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     left: 10,
     marginTop: 30,
     zIndex: 10,
-    padding: 10,
+    padding: 8,
     borderRadius: 25,
     backgroundColor: "#fff",
   },
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.626)',
     padding: 16,
   },
   headerContent: {

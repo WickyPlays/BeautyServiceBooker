@@ -1,3 +1,4 @@
+// Original styles after extraction
 import { StyleSheet } from "react-native";
 import { commonStyles } from "../../commons/common_style";
 
@@ -132,72 +133,6 @@ export const styles = StyleSheet.create({
   bothBadge: {
     backgroundColor: "#333",
   },
-  ratingFilterContainer: {
-    marginBottom: 20,
-  },
-  filterTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  ratingFilter: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  ratingButton: {
-    backgroundColor: "#f0f0f0",
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5
-  },
-  ratingButtonSelected: {
-    backgroundColor: commonStyles.primary,
-    padding: 10,
-    borderRadius: 5,
-    marginRight: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5
-  },
-  ratingText: {
-    fontSize: 16,
-    color: "#555",
-  },
-  ratingTextSelected: {
-    fontSize: 16,
-    color: "white",
-  },
-  commentContainer: {
-    marginTop: 20,
-  },
-  commentHeader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  comment: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  commentContent: {
-    marginLeft: 10,
-  },
-  commentUsername: {
-    fontWeight: "bold",
-  },
-  commentDate: {
-    fontSize: 12,
-    color: "#777",
-    marginBottom: 5,
-  },
-  commentText: {
-    fontSize: 14,
-    color: "#555",
-  },
   bottomContainer: {
     position: 'absolute',
     bottom: 0,
@@ -240,7 +175,8 @@ export const styles = StyleSheet.create({
     padding: 5,
     paddingVertical: 10,
     gap: 5,
-    borderRadius: 6
+    borderRadius: 6,
+    justifyContent: 'center'
   },
 
   bookButtonExist: {
@@ -252,6 +188,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     paddingVertical: 10,
     gap: 5,
-    borderRadius: 6
+    borderRadius: 6,
+    justifyContent: 'center'
   }
 });

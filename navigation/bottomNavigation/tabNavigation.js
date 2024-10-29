@@ -7,6 +7,7 @@ import {
   SettingsStack,
 } from "../stackNavigation/index";
 import CheckAuthWrapper from "../../components/checkAuthenWapper";
+import { commonStyles } from "../../commons/common_style";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,12 +16,18 @@ export default TabNavigation = () => {
     <CheckAuthWrapper>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarActiveTintColor: "purple",
+          tabBarActiveTintColor: commonStyles.primary,
           tabBarInactiveTintColor: "black",
           unmountOnBlur: true,
           tabBarStyle: {
-            paddingBottom: 10,
+            height: 60,
+            paddingTop: 5,
+            paddingBottom: 5,
             display: route.name === "Detail" ? "none" : "flex",
+          },
+          tabBarLabelStyle: {
+            fontSize: 14,
+            marginTop: 2,
           },
         })}
       >

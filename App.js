@@ -7,6 +7,7 @@ import useAuthStore from "./commons/authenStore";
 import TabNavigation from "./navigation/bottomNavigation/tabNavigation";
 import { navigationRef } from "./navigationRef";
 import SplashScreen from "./screens/SplashScreen/SplashScreen";
+import Toast from 'react-native-toast-message';
 
 const Stack = createStackNavigator();
 
@@ -55,6 +56,7 @@ export default function App() {
         )}
       </CheckAuthProvider>
       <StatusBar style="auto" />
+      <Toast />
     </NavigationContainer>
   );
 }

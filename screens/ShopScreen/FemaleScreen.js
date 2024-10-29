@@ -7,11 +7,11 @@ import { getServices } from '../../api/services'; // Import the API function
 
 export default function FemaleScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('all'); // Set default tab to "All"
+  const [selectedTab, setSelectedTab] = useState('all');
   const [services, setServices] = useState([]);
   const [sections, setSections] = useState([]);
   const [tabs, setTabs] = useState([
-    { id: 'all', title: 'All' }, // Add "All" tab
+    { id: 'all', title: 'All' },
     { id: 'barber', title: 'Barber' },
     { id: 'facial', title: 'Facial' },
     { id: 'massage', title: 'Massage' },

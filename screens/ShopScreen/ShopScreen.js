@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { styles } from './ShopScreen.style';
 import { ImageBackground } from 'react-native';
 import { getServices } from '../../api/services';
+import { useFocusEffect } from '@react-navigation/native';
+import { getServiceIds } from '../../commons/checkoutStore';
 
 export default function ShopScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
@@ -18,6 +20,7 @@ export default function ShopScreen({ navigation }) {
     { id: 'hair care', title: 'Hair Care' },
     { id: 'package', title: 'Package' },
   ]);
+  const [selectedItemIds, setSelectedItemIds] = useState([]);
 
   // Static data
   const salonData = {
@@ -30,9 +33,18 @@ export default function ShopScreen({ navigation }) {
     address: 'Keira throughway',
   };
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
+  const fetchSelectedItemsAndServices = async () => {
+    const ids = await getServiceIds()
+    setSelectedItemIds(ids || []);
+    console.log('selectedItemIds:', selectedItemIds);
+    await fetchServices();
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchSelectedItemsAndServices();
+    }, [])
+  );
 
   useEffect(() => {
     if (selectedTab === 'all') {
@@ -63,7 +75,7 @@ export default function ShopScreen({ navigation }) {
       } else {
         console.error('Error message:', error.message);
       }
-      setServices([]); // Ensure services is always an array
+      setServices([]);
     }
   };
 
@@ -152,8 +164,6 @@ export default function ShopScreen({ navigation }) {
         )}
         ListHeaderComponent={() => (
           <>
-            {/* Header Section */}
-
             <View style={styles.header}>
               <ImageBackground
                 resizeMode="cover"
@@ -174,7 +184,6 @@ export default function ShopScreen({ navigation }) {
               </View>
             </View>
 
-            {/* Action Buttons */}
             <View style={styles.headerActionsContainer}>
               <View style={styles.headerActions}>
                 <TouchableOpacity style={styles.headerActionsButtons} onPress={handleCall}>
@@ -196,7 +205,6 @@ export default function ShopScreen({ navigation }) {
               </View>
             </View>
 
-            {/* Draggable Tabs */}
             <View style={styles.tabsContainer}>
               <FlatList
                 data={tabs}

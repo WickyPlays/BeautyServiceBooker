@@ -4,7 +4,7 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { styles } from "./PastBookingItem.style";
 import { STATUS_STYLES } from "../../../commons/common_style";
 
-const PastBookingItem = ({ bookings, handleFavoriteToggle }) => {
+const PastBookingItem = ({ bookings, handleFavoriteToggle, handleServiceItemPress }) => {
   if (!bookings || bookings.length === 0) {
     return (
       <View style={styles.noBookingsContainer}>
@@ -49,7 +49,11 @@ const PastBookingItem = ({ bookings, handleFavoriteToggle }) => {
           </View>
 
           {booking.services.map((service, index) => (
-            <View key={index} style={styles.serviceItem}>
+            <TouchableOpacity
+              key={index}
+              style={styles.serviceItem}
+              onPress={() => handleServiceItemPress(service.id)}
+            >
               <Image
                 source={{ uri: service.image }}
                 style={styles.serviceImage}
@@ -57,7 +61,7 @@ const PastBookingItem = ({ bookings, handleFavoriteToggle }) => {
               <Text style={styles.descriptionText}>{service.serviceName}</Text>
               <Text style={[styles.dot, styles.descriptionText]}>•</Text>
               <Text style={styles.priceText}>${service.price}</Text>
-            </View>
+            </TouchableOpacity>
           ))}
 
           <View style={styles.bookingFooter}>

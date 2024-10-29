@@ -17,6 +17,10 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '600',
     },
+    errorText: {
+        color: '#ff4d4f',
+        marginBottom: 8,
+    },
     section: {
         backgroundColor: '#FFFFFF',
         padding: 16,
@@ -49,6 +53,15 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#e7c6ff',
         borderColor: '#b54eff',
+        borderWidth: 2,
+        borderRadius: 8,
+        padding: 5
+    },
+    appointmentDateNon: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#ffc6c6',
+        borderColor: '#ff4e4e',
         borderWidth: 2,
         borderRadius: 8,
         padding: 5

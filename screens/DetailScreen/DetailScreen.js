@@ -22,6 +22,8 @@ import { styles } from "./DetailScreen.style";
 import { aget, apost } from "../../commons/util_axios";
 import { renderStars } from "../../commons/common_style";
 import { addServiceId, getServiceIds, removeServiceId, hasServiceId } from "../../commons/checkoutStore";
+import DetailCommentSection from "./DetailCommentSection";
+import CryptoJS from "crypto-js";
 
 export default function DetailScreen() {
 	const [refreshing, setRefreshing] = useState(false);
@@ -30,7 +32,6 @@ export default function DetailScreen() {
 	const [comments, setComments] = useState([]);
 	const [filteredComments, setFilteredComments] = useState([]);
 	const [selectedRating, setSelectedRating] = useState(null);
-	const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 	const [showFixedHeader, setShowFixedHeader] = useState(false);
 	const [isWishlist, setIsWishlist] = useState(false);
 
@@ -41,12 +42,9 @@ export default function DetailScreen() {
 	const itemId = route.params.itemId;
 
 	useEffect(() => {
-		navigation.setOptions({ headerShown: false, tabBarStyle: {display: 'none'}});
+		navigation.setOptions({ headerShown: false, tabBarStyle: { display: 'none' } });
 	}, []);
 
-	const checkUserLoggedIn = async () => {
-
-	};
 
 	const fetchData = useCallback(async () => {
 		setLoading(true);
@@ -55,32 +53,12 @@ export default function DetailScreen() {
 			const response = await aget(`/services/${itemId}`);
 			const fetchedItem = response.data;
 			setItem(fetchedItem);
-			
-			let tempComments = [
-				{
-					id: 1,
-					username: "John",
-					text: "This is a comment",
-					rating: 5,
-					date: "2022-01-01",
-					avatar: "https://i.pravatar.cc/300?u=a042581f4e29026704d",
-				},
-				{
-					id: 2,
-					username: "Jane",
-					text: "This is another comment",
-					rating: 4,
-					date: "2022-01-02",
-					avatar: "https://i.pravatar.cc/300?u=a042581f4e29026705d",
-				},
-			]
-			setComments(tempComments);
-			setFilteredComments(tempComments);
+
+			await refreshComments();
 
 			let hasBooked = await hasServiceId(itemId);
 			setIsBooked(hasBooked);
 
-			await checkUserLoggedIn();
 		} catch (error) {
 			console.error(error);
 		} finally {
@@ -108,7 +86,7 @@ export default function DetailScreen() {
 	};
 
 	const handleCancelBookService = async () => {
-	
+
 		const cancelButtonPressed = await new Promise((resolve, reject) => {
 			Alert.alert(
 				"Cancel Booking",
@@ -134,34 +112,38 @@ export default function DetailScreen() {
 		}
 	};
 
+	const refreshComments = async () => {
+		try {
+			const commentsResponse = await aget(`/services/comments/${itemId}`);
+			const commentsData = commentsResponse.data;
+
+			const tempComments = commentsData.map(comment => {
+				const emailHash = CryptoJS.SHA256(comment.author.email.trim().toLowerCase()).toString();
+				return {
+					id: comment._id,
+					userID: comment.author._id,
+					username: comment.author.name,
+					text: comment.content,
+					rating: comment.rating,
+					date: new Date(comment.createdAt).toISOString().split('T')[0],
+					avatar: `https://www.gravatar.com/avatar/${emailHash}?s=300&d=identicon`,
+				};
+			});
+
+			setComments(tempComments);
+			setFilteredComments(tempComments);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
 	useEffect(() => {
 		fetchData();
 	}, [fetchData]);
 
-	useFocusEffect(() => {
-		checkUserLoggedIn();
-	});
-
 	const onRefresh = () => {
 		setRefreshing(true);
 		fetchData();
-	};
-
-	const addToWishlist = async () => {
-		setIsWishlist(true);
-	};
-
-	const removeFromWishlist = async () => {
-		setIsWishlist(false);
-	};
-
-	const toggleWishlist = async () => {
-		if (isWishlist) {
-			await removeFromWishlist()
-		} else {
-			await addToWishlist();
-			ToastAndroid.show("Item added to wishlist", ToastAndroid.SHORT);
-		}
 	};
 
 	const onShare = async () => {
@@ -172,19 +154,7 @@ export default function DetailScreen() {
 		} catch (error) {
 			console.error(error.message);
 		}
-	};
-
-	const handleRatingFilter = (rating) => {
-		setSelectedRating(rating);
-		if (rating) {
-			const filtered = comments.filter(
-				(comment) => comment.rating >= rating && comment.rating < rating + 1
-			);
-			setFilteredComments(filtered);
-		} else {
-			setFilteredComments(comments);
-		}
-	};
+	}
 
 	if (loading) {
 		return (
@@ -302,13 +272,6 @@ export default function DetailScreen() {
 					</View>
 
 					<View style={styles.itemTool}>
-						{/* <TouchableOpacity onPress={toggleWishlist}>
-							<Ionicons
-								name={isWishlist ? "heart" : "heart-outline"}
-								size={32}
-								color={isWishlist ? "red" : "black"}
-							/>
-						</TouchableOpacity> */}
 						<TouchableOpacity style={{ marginLeft: 16 }} onPress={onShare}>
 							<Ionicons name="share-social-outline" size={32} color="black" />
 						</TouchableOpacity>
@@ -316,52 +279,15 @@ export default function DetailScreen() {
 
 					<Divider style={styles.divider} />
 
-					<View style={styles.ratingFilterContainer}>
-						<Text style={styles.filterTitle}>Filter by Rating:</Text>
-						<View style={styles.ratingFilter}>
-							<TouchableOpacity
-								style={selectedRating === null ? styles.ratingButtonSelected : styles.ratingButton}
-								onPress={() => handleRatingFilter(null)}
-							>
-								<Text style={selectedRating === null ? styles.ratingTextSelected : styles.ratingText}>
-									Show all
-								</Text>
-							</TouchableOpacity>
-							{[1, 2, 3, 4, 5].map((rating) => (
-								<TouchableOpacity
-									key={rating}
-									style={selectedRating === rating ? styles.ratingButtonSelected : styles.ratingButton}
-									onPress={() => handleRatingFilter(rating)}
-								>
-									<Text style={selectedRating === rating ? styles.ratingTextSelected : styles.ratingText}>
-										{rating}
-									</Text>
-									<Ionicons
-										name="star"
-										size={16}
-										color={selectedRating === rating ? "#FFD700" : "gray"}
-									/>
-								</TouchableOpacity>
-							))}
-						</View>
-					</View>
-
-					<Divider style={styles.divider} />
-
-					<View style={styles.commentContainer}>
-						<Text style={styles.commentHeader}>Customer Reviews ({comments.length})</Text>
-						{filteredComments.map((comment) => (
-							<View key={comment.id} style={styles.comment}>
-								<Avatar source={{ uri: comment.avatar }} rounded />
-								<View style={styles.commentContent}>
-									<Text style={styles.commentUsername}>{comment.username}</Text>
-									{renderStars(comment.rating)}
-									<Text style={styles.commentDate}>{comment.date}</Text>
-									<Text style={styles.commentText}>{comment.text}</Text>
-								</View>
-							</View>
-						))}
-					</View>
+					<DetailCommentSection
+						itemId={itemId}
+						comments={comments}
+						setComments={setComments}
+						filteredComments={filteredComments}
+						setFilteredComments={setFilteredComments}
+						selectedRating={selectedRating}
+						setSelectedRating={setSelectedRating}
+						refreshComments={() => refreshComments(itemId)} />
 				</View>
 			</ScrollView>
 
@@ -373,7 +299,7 @@ export default function DetailScreen() {
 								style={styles.bookButtonCancel}
 								onPress={handleCancelBookService}
 							>
-								<Ionicons name="calendar-outline" size={20} color="white" />
+								<Ionicons name="close-circle" size={20} color="white" />
 								<Text style={styles.bookText}>Cancel</Text>
 							</TouchableOpacity>
 							<TouchableOpacity

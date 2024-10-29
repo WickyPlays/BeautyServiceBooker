@@ -14,7 +14,6 @@ import CheckoutResultFailedScreen from "../../screens/CheckoutScreen/CheckoutRes
 import { CheckoutResultSuccessScreen } from "../../screens/CheckoutScreen/CheckoutResultSuccessScreen";
 const Stack = createStackNavigator();
 
-// Stack for home page
 const HomeStack = () => (
   <Stack.Navigator
     screenOptions={{
@@ -22,7 +21,7 @@ const HomeStack = () => (
     }}
   >
     <Stack.Screen
-      name="Home"
+      name="HomeScreen"
       component={HomeScreen}
       options={{
         headerShown: false,

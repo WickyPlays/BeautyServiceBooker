@@ -5,7 +5,6 @@ import SignupScreen from "../../screens/SignupScreen/SignupScreen";
 
 const Stack = createStackNavigator();
 
-// Stack for authen
 const AuthStackScreen = () => (
   <Stack.Navigator>
     <Stack.Screen

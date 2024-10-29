@@ -162,7 +162,7 @@ export default function ShopScreen({ navigation }) {
               />
               <TouchableOpacity
                 style={styles.backButton}
-                onPress={() => navigation.goBack()}
+                onPress={() => navigation.navigate("HomeScreen")}
               >
                 <Ionicons name="arrow-back" size={23} color="black" />
               </TouchableOpacity>

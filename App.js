@@ -7,12 +7,6 @@ import useAuthStore from "./commons/authenStore";
 import TabNavigation from "./navigation/bottomNavigation/tabNavigation";
 import { navigationRef } from "./navigationRef";
 import SplashScreen from "./screens/SplashScreen/SplashScreen";
-import IntroScreen from "./screens/IntroScreen/IntroScreen";
-import DetailScreen from "./screens/DetailScreen/DetailScreen";
-import CheckoutScreen from "./screens/CheckoutScreen/CheckoutScreen";
-import { CheckoutDateScreen } from "./screens/CheckoutScreen/CheckoutDateScreen";
-import { CheckoutResultSuccessScreen } from "./screens/CheckoutScreen/CheckoutResultSuccessScreen";
-import CheckoutResultFailedScreen from "./screens/CheckoutScreen/CheckoutResultFailedScreen";
 
 const Stack = createStackNavigator();
 

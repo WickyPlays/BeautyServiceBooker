@@ -8,6 +8,11 @@ import TabNavigation from "./navigation/bottomNavigation/tabNavigation";
 import { navigationRef } from "./navigationRef";
 import SplashScreen from "./screens/SplashScreen/SplashScreen";
 import Toast from 'react-native-toast-message';
+import DetailScreen from "./screens/DetailScreen/DetailScreen";
+import CheckoutScreen from "./screens/CheckoutScreen/CheckoutScreen";
+import CheckoutResultFailedScreen from "./screens/CheckoutScreen/CheckoutResultFailedScreen";
+import { CheckoutResultSuccessScreen } from "./screens/CheckoutScreen/CheckoutResultSuccessScreen";
+import { CheckoutDateScreen } from "./screens/CheckoutScreen/CheckoutDateScreen";
 
 const Stack = createStackNavigator();
 
@@ -36,19 +41,36 @@ export default function App() {
         {(isAuthenticated) => (
           <Stack.Navigator>
             {!isAuthenticated ? (
-              <>
-                <Stack.Screen
-                  name="Auth"
-                  component={AuthStackScreen}
-                  options={{ headerShown: false }}
-                />
-              </>
+              <Stack.Screen
+                name="Auth"
+                component={AuthStackScreen}
+                options={{ headerShown: false }}
+              />
             ) : (
               <>
                 <Stack.Screen
                   name="Main"
                   component={TabNavigation}
                   options={{ headerShown: false }}
+                />
+                <Stack.Screen name="Detail" component={DetailScreen} />
+                <Stack.Screen name="Checkout" component={CheckoutScreen} />
+                <Stack.Screen
+                  name="CheckoutResultSuccess"
+                  component={CheckoutResultSuccessScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="CheckoutResultFailed"
+                  component={CheckoutResultFailedScreen}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Checkout Date"
+                  component={CheckoutDateScreen}
+                  options={{
+                    headerShown: true
+                  }}
                 />
               </>
             )}

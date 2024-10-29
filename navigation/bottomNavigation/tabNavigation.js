@@ -15,21 +15,23 @@ export default TabNavigation = () => {
   return (
     <CheckAuthWrapper>
       <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarActiveTintColor: commonStyles.primary,
-          tabBarInactiveTintColor: "black",
-          unmountOnBlur: true,
-          tabBarStyle: {
-            height: 60,
-            paddingTop: 5,
-            paddingBottom: 5,
-            display: route.name === "Detail" ? "none" : "flex",
-          },
-          tabBarLabelStyle: {
-            fontSize: 14,
-            marginTop: 2,
-          },
-        })}
+        screenOptions={({ route }) => {
+          return {
+            tabBarActiveTintColor: commonStyles.primary,
+            tabBarInactiveTintColor: "black",
+            unmountOnBlur: true,
+            tabBarStyle: {
+              height: 60,
+              paddingTop: 5,
+              paddingBottom: 5,
+
+            },
+            tabBarLabelStyle: {
+              fontSize: 14,
+              marginTop: 2,
+            },
+          };
+        }}
       >
         <Tab.Screen
           name="Home"

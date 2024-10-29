@@ -105,8 +105,8 @@ export const CheckoutDateScreen = () => {
         <View>
           <Text style={styles.cardInfo}>Visa •••• 0981</Text>
           <View style={styles.priceContainer}>
-            <Text style={styles.priceText}>$449</Text>
-            <Text style={styles.taxText}>plus taxes</Text>
+            {/* <Text style={styles.priceText}>$449</Text>
+            <Text style={styles.taxText}>plus taxes</Text> */}
           </View>
         </View>
         <View>

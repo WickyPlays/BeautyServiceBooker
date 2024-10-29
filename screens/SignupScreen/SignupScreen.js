@@ -39,8 +39,6 @@ export default function SignupScreen() {
         password,
       });
 
-      console.log("Signup response:", registerResponse); // Add logging to inspect the response
-
       if (
         registerResponse.status !== 201 ||
         registerResponse.data !== "User created successfully"
@@ -49,28 +47,20 @@ export default function SignupScreen() {
         return;
       }
 
-      // Log in the user
       const loginResponse = await apost("/auth/login", { email, password });
-
-      console.log("Login response:", loginResponse); // Add logging to inspect the response
 
       if (loginResponse.status !== 200 || !loginResponse.data.access_token) {
         setErrorMessage("Something went wrong. Try again later");
         return;
       }
 
-      // Assuming the response contains the token and userInfo
       const { access_token, userInfo } = loginResponse.data;
-      console.log("check response", loginResponse.data);
-
-      // Log in the user
       await login({ access_token, userInfo });
 
-      // Navigate to the main screen after successful signup
       setErrorMessage("");
       navigateToMain();
     } catch (error) {
-      console.error("Signup error:", error); // Add logging to inspect the error
+      console.error("Signup error:", error);
       setErrorMessage("Error attempting to sign up");
     }
   };

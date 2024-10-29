@@ -31,7 +31,6 @@ export const removeToken = async () => {
 export const getUserFromToken = async () => {
   try {
     const token = await getToken();
-    console.log("token", token);
     if (token) {
       return token.userInfo;
     }

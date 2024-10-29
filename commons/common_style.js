@@ -5,6 +5,15 @@ export const commonStyles = {
     primary: '#6440fe'
 }
 
+export const STATUS_STYLES = {
+    pending: { color: "#FFA500", icon: "pencil", label: "Pending" },
+    approved: { color: "#007bff", icon: "checkmark-circle", label: "Approved" },
+    rejected: { color: "#FF6347", icon: "close-circle", label: "Rejected" },
+    completed: { color: "#28a745", icon: "checkmark-circle", label: "Completed" },
+    cancelled: { color: "#FF6347", icon: "close-circle", label: "Cancelled" },
+    finished: { color: "#007bff", icon: "checkmark-circle", label: "Finished" },
+};
+
 export const renderStars = (rating) => {
     const totalStars = 5;
     const fullStars = Math.floor(rating);

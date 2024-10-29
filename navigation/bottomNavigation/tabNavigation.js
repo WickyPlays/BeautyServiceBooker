@@ -1,23 +1,28 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import {
   HomeStack,
   BookingStack,
   SettingsStack,
 } from "../stackNavigation/index";
 import CheckAuthWrapper from "../../components/checkAuthenWapper";
+
 const Tab = createBottomTabNavigator();
 
-const TabNavigation = () => {
+export default TabNavigation = () => {
   return (
     <CheckAuthWrapper>
       <Tab.Navigator
-        screenOptions={{
+        screenOptions={({ route }) => ({
           tabBarActiveTintColor: "purple",
           tabBarInactiveTintColor: "black",
           unmountOnBlur: true,
-        }}
+          tabBarStyle: {
+            paddingBottom: 10,
+            display: route.name === "Detail" ? "none" : "flex",
+          },
+        })}
       >
         <Tab.Screen
           name="Home"
@@ -25,7 +30,7 @@ const TabNavigation = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({ size, color }) => (
-              <Feather name="home" size={size} color={color} />
+              <Ionicons name="home" size={size} color={color} />
             ),
           }}
         />
@@ -35,7 +40,7 @@ const TabNavigation = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({ size, color }) => (
-              <Feather name="calendar" size={size} color={color} />
+              <Ionicons name="calendar" size={size} color={color} />
             ),
           }}
         />
@@ -45,7 +50,7 @@ const TabNavigation = () => {
           options={{
             headerShown: false,
             tabBarIcon: ({ size, color }) => (
-              <Feather name="settings" size={size} color={color} />
+              <Ionicons name="settings" size={size} color={color} />
             ),
           }}
         />
@@ -53,5 +58,3 @@ const TabNavigation = () => {
     </CheckAuthWrapper>
   );
 };
-
-export default TabNavigation;

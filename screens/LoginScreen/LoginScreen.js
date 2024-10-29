@@ -18,7 +18,6 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
       const response = await apost("/auth/login", { email, password });
-      console.log("check response", response);
       const { access_token, userInfo } = response.data;
 
       if (response.status === 200 && access_token) {

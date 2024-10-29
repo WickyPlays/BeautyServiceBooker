@@ -21,7 +21,6 @@ export default function SettingsScreen({ navigation }) {
     setRefreshing(true);
     setTimeout(() => setRefreshing(false), refreshTimeout);
   }, []);
-  console.log("user info in setting", user)
 
   return (
     <ScrollView
@@ -64,23 +63,24 @@ const ProfileSection = ({ user }) => {
 
 const MenuSection = ({ navigation }) => (
   <View style={styles.menuContainer}>
-    {menuItems.map(({ icon, title, subtitle, redirect }, index) => (
+    {menuItems.map(({ icon, title, subtitle, redirectStack, redirect }, index) => (
       <MenuItem
         key={index}
         navigation={navigation}
         icon={icon}
         title={title}
         subtitle={subtitle}
+        redirectStack={redirectStack}
         redirect={redirect}
       />
     ))}
   </View>
 );
 
-const MenuItem = ({ navigation, icon, title, subtitle, redirect }) => (
+const MenuItem = ({ navigation, icon, title, subtitle, redirectStack,redirect }) => (
   <TouchableOpacity
     style={styles.menuItem}
-    onPress={() => redirect && navigation.navigate(redirect)}
+    onPress={() => redirect && navigation.navigate(redirectStack, redirect)}
   >
     <Ionicons name={icon} size={24} color="#000" />
     <View style={styles.menuText}>
@@ -112,12 +112,22 @@ const menuItems = [
   {
     icon: "heart-outline",
     title: "Your favorites",
-    subtitle: "Reorder your favorite service in a click",
+    subtitle: "Reorder your favorite appointments in a click",
+    redirectStack: "Booking",
+    redirect: {
+      screen: "Booking Screen",
+      params: {
+        tab: "Favorites",
+      },
+    },
   },
   {
     icon: "location-outline",
     title: "Manage Address",
-    redirect: "SettingsSavedAddress",
+    redirectStack: "Setting",
+    redirect: {
+      screen: "SettingsSavedAddress",
+    },
   },
   {
     icon: "notifications-outline",

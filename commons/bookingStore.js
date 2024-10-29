@@ -6,7 +6,6 @@ const useBookingStore = create((set) => ({
   FetchAppointment: async (id) => {
     try {
       const response = await getPastAppointment(id);
-      console.log("appointments", response);
       if(response && response.status === 200){
         set({ appointments: response.data || [] });
       }

@@ -41,7 +41,7 @@ export default function DetailScreen() {
 	const itemId = route.params.itemId;
 
 	useEffect(() => {
-		navigation.setOptions({ headerShown: false });
+		navigation.setOptions({ headerShown: false, tabBarStyle: {display: 'none'}});
 	}, []);
 
 	const checkUserLoggedIn = async () => {
@@ -49,15 +49,13 @@ export default function DetailScreen() {
 	};
 
 	const fetchData = useCallback(async () => {
-		console.log("Item id: " + itemId);
 		setLoading(true);
 
 		try {
 			const response = await aget(`/services/${itemId}`);
 			const fetchedItem = response.data;
 			setItem(fetchedItem);
-
-			//TEMPORARY SOLUTION
+			
 			let tempComments = [
 				{
 					id: 1,
@@ -200,7 +198,7 @@ export default function DetailScreen() {
 
 				<TouchableOpacity
 					style={styles.homeButton}
-					onPress={() => navigation.navigate("Home")}
+					onPress={() => navigation.navigate("HomeScreen")}
 				>
 					<Ionicons name="home" size={23} color="black" />
 				</TouchableOpacity>
@@ -217,7 +215,7 @@ export default function DetailScreen() {
 						<Ionicons name="arrow-back" size={23} color="black" />
 					</TouchableOpacity>
 					<Text style={styles.fixedHeaderText}>{item?.name}</Text>
-					<TouchableOpacity onPress={() => navigation.navigate("Home")}>
+					<TouchableOpacity onPress={() => navigation.navigate("HomeScreen")}>
 						<Ionicons name="home" size={23} color="black" />
 					</TouchableOpacity>
 				</View>
@@ -239,7 +237,7 @@ export default function DetailScreen() {
 
 				<TouchableOpacity
 					style={styles.homeButton}
-					onPress={() => navigation.navigate("Home")}
+					onPress={() => navigation.navigate("HomeScreen")}
 				>
 					<Ionicons name="home" size={23} color="black" />
 				</TouchableOpacity>

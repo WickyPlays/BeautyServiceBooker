@@ -19,7 +19,6 @@ export default function SettingsSavedAddress() {
   };
 
   const confirmDelete = () => {
-    console.log(`Deleted: ${selectedAddress.label}`);
     setModalVisible(false);
   };
 

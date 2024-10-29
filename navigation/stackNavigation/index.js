@@ -47,7 +47,6 @@ const HomeStack = () => (
       component={DetailScreen}
       options={{
         headerShown: false,
-        
       }}
     />
      <Stack.Screen

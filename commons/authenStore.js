@@ -34,7 +34,6 @@ const useAuthStore = create((set) => ({
     const token = await getToken();
     if (token) {
       set({ isAuthenticated: true, user: token.userInfo });
-      console.log("user info", token.userInfo);
     }
   },
   login: async (token) => {

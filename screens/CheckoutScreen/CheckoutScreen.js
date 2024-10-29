@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Alert } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Alert, Linking } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { styles } from './CheckoutScreen.style';
 import { clearServiceIds, getServiceDateId, getServiceIds, removeServiceDateId } from '../../commons/checkoutStore';
@@ -61,16 +61,25 @@ export default function CheckoutScreen() {
 		}
 
 		try {
-			await apost('/appointments/create-appointment', {
-				userID: user._id,
-				serviceID: services.map(service => service._id),
-				stylistID: selectedStylist,
-				appointmentDate: date
-			}).then(async () => {
-				await removeServiceDateId();
-				await clearServiceIds();
-				navigation.navigate('CheckoutResultSuccess')
-			});
+			// await apost('/appointments/create-appointment', {
+			// 	userID: user._id,
+			// 	serviceID: services.map(service => service._id),
+			// 	stylistID: selectedStylist,
+			// 	appointmentDate: date
+			// }).then(async () => {
+			// 	await removeServiceDateId();
+			// 	await clearServiceIds();
+			// 	navigation.navigate('CheckoutResultSuccess')
+			// });
+			await apost('/payment/create_payment_url', {
+				amount: 10000,
+				orderDescription: 'Woodlands Hills Salon'
+			}).then(async (res) => {
+					let data = res.data;
+					let url = data.url;
+
+					Linking.openURL(url);
+			})
 		} catch (error) {
 			console.error("Error creating appointment:", error);
 			Alert.alert("Error", "Could not create appointment. Please try again.");

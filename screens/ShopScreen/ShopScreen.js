@@ -147,9 +147,21 @@ export default function ShopScreen({ navigation }) {
           <Text style={styles.serviceText}>{item.duration} mins</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.selectButton} onPress={() => navigation.navigate('Detail', { itemId: item._id })}>
-        <Text style={styles.selectText}>Select</Text>
-      </TouchableOpacity>
+      {
+        selectedItemIds.includes(item._id) ? (
+          <TouchableOpacity style={styles.selectedButton} onPress={() => {
+            navigation.navigate('Detail', { itemId: item._id });
+          }}>
+            <Text style={styles.selectedText}>Selected</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.selectButton} onPress={() => {
+            navigation.navigate('Detail', { itemId: item._id });
+          }}>
+            <Text style={styles.selectText}>Select</Text>
+          </TouchableOpacity>
+        )
+      }
     </View>
   );
 
@@ -229,6 +241,19 @@ export default function ShopScreen({ navigation }) {
         )}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
+      {
+        selectedItemIds.length > 0 && (
+          <View style={styles.selectedItemsContainer}>
+            <Text style={styles.selectedItemsText}>{selectedItemIds.length === 1 ? `${selectedItemIds.length} service selected` : `${selectedItemIds.length} services selected`}</Text>
+            <TouchableOpacity
+              style={styles.btnFinishBooking}
+              onPress={() => navigation.navigate('Checkout')}
+            >
+              <Text style={styles.btnFinishBookingText}>Finish booking</Text>
+            </TouchableOpacity>
+          </View>
+        )
+      }
     </View>
   );
 }

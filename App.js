@@ -17,6 +17,15 @@ import * as Linking from 'expo-linking';
 
 const Stack = createStackNavigator();
 
+const linking = {
+  prefixes: ["beautyservicebooker://"],
+  config: {
+    screens: {
+      CheckoutResultSuccess: "success",
+    },
+  },
+};
+
 const CheckAuthProvider = ({ children }) => {
   const { isAuthenticated, initializeAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(true);
@@ -33,16 +42,6 @@ const CheckAuthProvider = ({ children }) => {
   }
 
   return children(isAuthenticated);
-};
-
-const linking = {
-  prefixes: ["beautyservicebooker://"],
-  config: {
-    screens: {
-      success: "CheckoutResultSuccess",
-      failed: "CheckoutResultFailed",
-    },
-  },
 };
 
 export default function App() {
@@ -80,7 +79,7 @@ export default function App() {
                   name="Checkout Date"
                   component={CheckoutDateScreen}
                   options={{
-                    headerShown: true
+                    headerShown: true,
                   }}
                 />
               </>

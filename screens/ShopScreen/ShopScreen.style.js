@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { commonStyles } from '../../commons/common_style';
 
 export const styles = StyleSheet.create({
   container: {
@@ -154,4 +155,43 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  selectedButton: {
+    backgroundColor: commonStyles.primary,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+  },
+  selectedText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  selectedItemsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 4,
+    backgroundColor: commonStyles.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    marginHorizontal: 7,
+    bottom: 10,
+    borderRadius: 20,
+  },
+  selectedItemsText: {
+    fontSize: 17,
+    marginLeft: 4,
+    color: '#fff',
+  },
+  btnFinishBooking: {
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+  },
+  btnFinishBookingText: {
+    color: commonStyles.primary,
+    fontSize: 14,
+    fontWeight: '600',
+  },  
 });

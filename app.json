@@ -11,6 +11,8 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "scheme": "beautyservicebooker",
+    "platforms": ["ios", "android"],
     "ios": {
       "supportsTablet": true
     },

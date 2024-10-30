@@ -23,6 +23,8 @@ export const CheckoutWebViewScreen = ({ route }) => {
             const urlParams = new URLSearchParams(requestedUrl.split('?')[1]);
             const responseCode = urlParams.get('vnp_ResponseCode');
 
+            console.log(serviceIds)
+
             apost('/payment/create-appointment-ipn' + requestedUrl.replace('http://localhost:5001/payment/create-appointment-ipn', ''), {
                 serviceIDs: serviceIds,
                 stylistID: stylistId,

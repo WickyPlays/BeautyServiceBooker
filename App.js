@@ -111,7 +111,7 @@ export default function App() {
                     title: "Saved Address",
                   }}
                 />
-                <Stack.Screen name="WebViewScreen" component={CheckoutWebViewScreen}
+                <Stack.Screen name="CheckoutWebView" component={CheckoutWebViewScreen}
                   options={{ headerShown: true, title: "Checkout" }} />
 
               </>

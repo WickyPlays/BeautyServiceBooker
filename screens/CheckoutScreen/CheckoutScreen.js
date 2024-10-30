@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Alert, Linking, Image } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Image } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { styles } from './CheckoutScreen.style';
 import { clearServiceIds, getServiceDateId, getServiceIds, removeServiceDateId } from '../../commons/checkoutStore';
@@ -8,9 +8,9 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import useAuthStore from '../../commons/authenStore';
 import { Picker } from '@react-native-picker/picker';
+import Toast from 'react-native-toast-message'; // Import Toast
 
 export default function CheckoutScreen() {
-
 	const { user } = useAuthStore();
 	const navigation = useNavigation();
 	const [services, setServices] = useState([]);
@@ -25,20 +25,27 @@ export default function CheckoutScreen() {
 			const serviceData = await Promise.all(serviceIds.map(id => aget(`/services/${id}`)));
 			setServices(serviceData.map(response => response.data));
 		} catch (error) {
-			console.error("Error fetching service data:", error);
+			Toast.show({
+				type: 'error',
+				text1: 'Error fetching services',
+				text2: 'Could not retrieve service data.',
+			});
 		}
 
 		let date = await getServiceDateId();
 		setDate(date);
 	};
 
-	// Fetch stylists
 	const fetchStylists = async () => {
 		try {
 			const response = await aget('/users/stylists');
 			setStylists(response.data);
 		} catch (error) {
-			console.error("Error fetching stylists:", error);
+			Toast.show({
+				type: 'error',
+				text1: 'Error fetching stylists',
+				text2: 'Could not retrieve stylist data.',
+			});
 		}
 	};
 
@@ -56,32 +63,36 @@ export default function CheckoutScreen() {
 
 	const handleCreateAppointment = async () => {
 		if (!date || !selectedStylist || services.length === 0) {
-			Alert.alert("Incomplete Information", "Please select a service, stylist, and date.");
+			Toast.show({
+				type: 'error',
+				text1: 'Incomplete Information',
+				text2: 'Please select a service, stylist, and date.',
+			});
 			return;
 		}
 
 		try {
-			// await apost('/appointments/create-appointment', {
-			// 	serviceID: services.map(service => service._id),
-			// 	stylistID: selectedStylist,
-			// 	appointmentDate: date
-			// }).then(async () => {
-			// 	await removeServiceDateId();
-			// 	await clearServiceIds();
-			// 	navigation.navigate('CheckoutResultSuccess')
-			// });
-			await apost('/payment/create_payment_url', {
+			await apost('/payment/create-appointment', {
 				serviceIDs: services.map(service => service._id),
+				stylistID: selectedStylist,
+				appointmentDate: date,
 			}).then(async (res) => {
 				let data = res.data;
 				let url = data.url;
 
-				// Linking.openURL(url);
-				navigation.navigate('CheckoutWebViewScreen', { url: url });
-			})
+				navigation.navigate('CheckoutWebView', {
+					url: url,
+					serviceIds: services.map(service => service._id),
+					stylistId: selectedStylist,
+					appointmentDate: date.toISOString(),
+				});
+			});
 		} catch (error) {
-			console.error("Error creating appointment:", error);
-			Alert.alert("Error", "Could not create appointment. Please try again.");
+			Toast.show({
+				type: 'error',
+				text1: 'Error creating appointment',
+				text2: error.response.data.message,
+			});
 		}
 	};
 

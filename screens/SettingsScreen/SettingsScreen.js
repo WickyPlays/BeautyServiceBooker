@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -6,20 +6,42 @@ import {
   RefreshControl,
   TouchableOpacity,
   Image,
-  StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { styles } from "./SettingsScreen.style";
+import CryptoJS from "crypto-js";
+import {aget} from "../../commons/util_axios";
 import useAuthStore from "../../commons/authenStore";
 import useNavigationStore from "../../navigationRef";
-import CryptoJS from "crypto-js";
+
 const refreshTimeout = 2000;
 
 export default function SettingsScreen({ navigation }) {
-  const { user } = useAuthStore();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Function to fetch user data
+  const fetchUserProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await aget("/whois/profile");
+      setUser(response.data);
+    } catch (error) {
+      console.error("Failed to fetch profile data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), refreshTimeout);
+    fetchUserProfile().finally(() => setRefreshing(false));
   }, []);
 
   return (
@@ -30,30 +52,33 @@ export default function SettingsScreen({ navigation }) {
       }
     >
       <View style={styles.container}>
-        <ProfileSection user={user} />
-        <MenuSection navigation={navigation} />
-        <LogoutButton navigation={navigation} />
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <>
+            <ProfileSection user={user} navigation={navigation} />
+            <MenuSection navigation={navigation} />
+            <LogoutButton navigation={navigation} />
+          </>
+        )}
       </View>
     </ScrollView>
   );
 }
 
-const ProfileSection = ({ user }) => {
+const ProfileSection = ({ user, navigation }) => {
   const emailHash = CryptoJS.SHA256(user.email.toLowerCase()).toString();
   const uri = `https://www.gravatar.com/avatar/${emailHash}?d=identicon`;
 
   return (
     <View style={styles.profileContainer}>
-      <Image
-        source={{ uri }}
-        style={styles.profileImage}
-      />
+      <Image source={{ uri }} style={styles.profileImage} />
       <View style={styles.profileInfo}>
         <Text style={styles.profileName}>{user.name}</Text>
         <Text style={styles.profileContact}>
           {user.phone} · {user.email}
         </Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile Edit")}>
           <Text style={styles.editText}>Edit</Text>
         </TouchableOpacity>
       </View>
@@ -77,7 +102,7 @@ const MenuSection = ({ navigation }) => (
   </View>
 );
 
-const MenuItem = ({ navigation, icon, title, subtitle, redirectStack,redirect }) => (
+const MenuItem = ({ navigation, icon, title, subtitle, redirectStack, redirect }) => (
   <TouchableOpacity
     style={styles.menuItem}
     onPress={() => redirect && navigation.navigate(redirectStack, redirect)}
@@ -94,6 +119,7 @@ const MenuItem = ({ navigation, icon, title, subtitle, redirectStack,redirect })
 const LogoutButton = () => {
   const logout = useAuthStore((state) => state.logout);
   const navigateToAuth = useNavigationStore((state) => state.navigateToAuth);
+
   return (
     <TouchableOpacity
       style={styles.logoutButton}
@@ -140,75 +166,3 @@ const menuItems = [
     subtitle: "Privacy Policy, Terms of Services, Licenses",
   },
 ];
-
-const styles = StyleSheet.create({
-  scrollViewContent: {
-    flexGrow: 1,
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    paddingTop: 80,
-    backgroundColor: "#fff",
-  },
-  profileContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 15,
-  },
-  profileInfo: {
-    flex: 1,
-  },
-  profileName: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  profileContact: {
-    fontSize: 14,
-    color: "#A0A0A0",
-  },
-  editText: {
-    fontSize: 14,
-    color: "#6200EE",
-    marginTop: 5,
-  },
-  menuContainer: {
-    marginTop: 10,
-  },
-  menuItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E0E0E0",
-  },
-  menuText: {
-    flex: 1,
-    marginLeft: 15,
-  },
-  menuTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  menuSubtitle: {
-    fontSize: 13,
-    color: "#A0A0A0",
-  },
-  logoutButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 30,
-  },
-  logoutText: {
-    color: "red",
-    fontSize: 16,
-    marginLeft: 10,
-  },
-});

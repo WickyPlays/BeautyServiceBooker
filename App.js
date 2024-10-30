@@ -14,6 +14,7 @@ import CheckoutResultFailedScreen from "./screens/CheckoutScreen/CheckoutResultF
 import { CheckoutResultSuccessScreen } from "./screens/CheckoutScreen/CheckoutResultSuccessScreen";
 import { CheckoutDateScreen } from "./screens/CheckoutScreen/CheckoutDateScreen";
 import * as Linking from 'expo-linking';
+import ProfileEditScreen from "./screens/ProfileEditScreen/ProfileEditScreen";
 
 const Stack = createStackNavigator();
 
@@ -81,6 +82,11 @@ export default function App() {
                   options={{
                     headerShown: true,
                   }}
+                />
+                <Stack.Screen
+                  name="Profile Edit"
+                  component={ProfileEditScreen}
+                  options={{ headerShown: true }}
                 />
               </>
             )}

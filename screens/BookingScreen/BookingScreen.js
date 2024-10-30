@@ -137,8 +137,7 @@ export default function BookingScreen() {
   };
 
   const handleServiceItemPress = (itemId) => {
-    console.log(itemId)
-    navigation.navigate("Home", { screen: "Detail", params: { itemId: itemId } });
+    navigation.navigate("Detail", { itemId: itemId });
   };
 
   return (

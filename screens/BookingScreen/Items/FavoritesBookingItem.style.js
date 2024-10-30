@@ -2,6 +2,11 @@ import { StyleSheet } from "react-native";
 import { commonStyles } from "../../../commons/common_style";
 
 export const styles = StyleSheet.create({
+  noBookingsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   bookingItem: {
     width: "100%",
     padding: 16,

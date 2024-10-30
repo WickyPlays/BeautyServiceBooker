@@ -31,7 +31,6 @@ export default function DetailCommentSection({ itemId, comments, setComments, fi
     if (newComment.trim() === "") return;
 
     const commentData = {
-      userID: userID,
       rating: selectedRatingForm,
       content: newComment,
     };

@@ -16,6 +16,7 @@ import {
 	useNavigation,
 	useFocusEffect,
 } from "@react-navigation/native";
+import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from "@expo/vector-icons";
 import { Divider, Avatar } from "react-native-elements";
 import { styles } from "./DetailScreen.style";
@@ -178,7 +179,7 @@ export default function DetailScreen() {
 	}
 
 	return (
-		<View style={{ flex: 1, marginTop: 30 }}>
+		<View style={{ flex: 1 }}>
 			{showFixedHeader && (
 				<View style={styles.fixedHeader}>
 					<TouchableOpacity onPress={() => navigation.goBack()}>

@@ -1,5 +1,6 @@
 
 import { StyleSheet } from 'react-native';
+import { commonStyles } from '../../commons/common_style';
 
 export const styles = StyleSheet.create({
     container: {
@@ -23,12 +24,41 @@ export const styles = StyleSheet.create({
     },
     section: {
         backgroundColor: '#FFFFFF',
-        padding: 16,
+        padding: 13,
         borderRadius: 8,
+    },
+    item: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderWidth: 1,
+        borderColor: '#cacaca',
+        borderRadius: 8,
+        padding: 10,
+        marginBottom: 10,
     },
     title: {
         fontSize: 18,
         fontWeight: '600',
+        marginBottom: 8,
+    },
+    serviceTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        marginBottom: 15,
+        marginTop: 20,
+        paddingHorizontal: 10
+    },
+    itemImage: {
+        width: 35,
+        height: 35,
+        resizeMode: 'cover',
+        borderRadius: 50
+    },
+    itemInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10
     },
     row: {
         flexDirection: 'row',
@@ -67,7 +97,9 @@ export const styles = StyleSheet.create({
         padding: 5
     },
     priceText: {
-        color: '#6B7280',
+        color: commonStyles.primary,
+        fontSize: 16,
+        fontWeight: '600',
     },
     counter: {
         flexDirection: 'row',
@@ -113,7 +145,8 @@ export const styles = StyleSheet.create({
         backgroundColor: '#6D28D9',
         padding: 16,
         borderRadius: 8,
-        marginTop: 16,
+        marginTop: 10,
+        marginBottom: 40
     },
     totalText: {
         fontSize: 18,

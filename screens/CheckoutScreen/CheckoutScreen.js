@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Text, View, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Alert, Linking } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, RefreshControl, StyleSheet, Alert, Linking, Image } from 'react-native';
 import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { styles } from './CheckoutScreen.style';
 import { clearServiceIds, getServiceDateId, getServiceIds, removeServiceDateId } from '../../commons/checkoutStore';
@@ -61,25 +61,24 @@ export default function CheckoutScreen() {
 		}
 
 		try {
-			// await apost('/appointments/create-appointment', {
-			// 	userID: user._id,
-			// 	serviceID: services.map(service => service._id),
-			// 	stylistID: selectedStylist,
-			// 	appointmentDate: date
-			// }).then(async () => {
-			// 	await removeServiceDateId();
-			// 	await clearServiceIds();
-			// 	navigation.navigate('CheckoutResultSuccess')
-			// });
-			await apost('/payment/create_payment_url', {
-				amount: 10000,
-				orderDescription: 'Woodlands Hills Salon'
-			}).then(async (res) => {
-					let data = res.data;
-					let url = data.url;
+			await apost('/appointments/create-appointment', {
+				serviceID: services.map(service => service._id),
+				stylistID: selectedStylist,
+				appointmentDate: date
+			}).then(async () => {
+				await removeServiceDateId();
+				await clearServiceIds();
+				navigation.navigate('CheckoutResultSuccess')
+			});
+			// await apost('/payment/create_payment_url', {
+			// 	amount: 10000,
+			// 	orderDescription: 'Woodlands Hills Salon'
+			// }).then(async (res) => {
+			// 	let data = res.data;
+			// 	let url = data.url;
 
-					Linking.openURL(url);
-			})
+			// 	Linking.openURL(url);
+			// })
 		} catch (error) {
 			console.error("Error creating appointment:", error);
 			Alert.alert("Error", "Could not create appointment. Please try again.");
@@ -122,15 +121,16 @@ export default function CheckoutScreen() {
 				)
 			}
 
+			<Text style={styles.serviceTitle}>Services:</Text>
 			{services.map((service) => (
-				<View key={service._id} style={styles.section}>
-					<View style={styles.itemRow}>
-						<View>
-							<Text>{service.name}</Text>
-							<Text style={styles.priceText}>${service.price}</Text>
-						</View>
+				<TouchableOpacity key={service._id} style={styles.item} 
+					onPress={() => navigation.navigate('Detail', { itemId: service._id })}>
+					<View style={styles.itemInfo}>
+						<Image source={{ uri: service.image }} style={styles.itemImage} />
+						<Text>{service.name}</Text>
 					</View>
-				</View>
+					<Text style={styles.priceText}>${service.price}</Text>
+				</TouchableOpacity>
 			))}
 
 			<View style={styles.section}>
@@ -161,21 +161,6 @@ export default function CheckoutScreen() {
 					<FontAwesome name="gift" size={24} color="black" />
 					<Text style={styles.rowText}>Offers & Promo Code</Text>
 					<Text style={styles.viewOffers}>View offers</Text>
-				</View>
-			</View>
-
-			<View style={styles.section}>
-				<View style={styles.row}>
-					<Text>Item total: </Text>
-					<Text>${services.reduce((total, service) => total + service.price, 0)}</Text>
-				</View>
-				<View style={styles.row}>
-					<Text style={styles.discountText}>Coupon Discount: </Text>
-					<Text style={styles.discountText}>-$10</Text>
-				</View>
-				<View style={[styles.row, styles.lastRow]}>
-					<Text style={styles.amountPayableText}>Amount Payable: </Text>
-					<Text style={styles.amountPayableText}>${services.reduce((total, service) => total + service.price, 0) - 10}</Text>
 				</View>
 			</View>
 

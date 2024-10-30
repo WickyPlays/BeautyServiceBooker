@@ -3,6 +3,7 @@ import { StyleSheet, View, ActivityIndicator, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
 import { aget, apost } from '../../commons/util_axios';
+import { clearServiceIds, removeServiceDateId } from '../../commons/checkoutStore';
 
 export const CheckoutWebViewScreen = ({ route }) => {
     const { url, serviceIds, stylistId, appointmentDate } = route.params;
@@ -27,13 +28,15 @@ export const CheckoutWebViewScreen = ({ route }) => {
                 stylistID: stylistId,
 				appointmentDate: new Date(appointmentDate)
             })
-                .then((res) => {
+                .then(async (res) => {
                     let data = res.data
                     if (data.RspCode === '00') {
                         navigation.navigate('CheckoutResultSuccess', { message: data.message });
                     } else {
                         navigation.navigate('CheckoutResultFailed', { message: data.message });
                     }
+                    await clearServiceIds();
+                    await removeServiceDateId();
                 }).catch((e) => {
                     console.log(e)
                 })

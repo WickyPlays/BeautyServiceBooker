@@ -3,9 +3,11 @@ import { View, Text, RefreshControl, StyleSheet, TouchableOpacity, Image, Sectio
 import { Ionicons } from '@expo/vector-icons';
 import { styles } from './ShopScreen.style';
 import { ImageBackground } from 'react-native';
-import { getServices } from '../../api/services'; // Import the API function
+import { getServices } from '../../api/services';
+import { useFocusEffect } from '@react-navigation/native';
+import { getServiceIds } from '../../commons/checkoutStore';
 
-export default function FemaleScreen({ navigation }) {
+export default function FemaleShopScreen({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedTab, setSelectedTab] = useState('all');
   const [services, setServices] = useState([]);
@@ -18,6 +20,7 @@ export default function FemaleScreen({ navigation }) {
     { id: 'hair care', title: 'Hair Care' },
     { id: 'package', title: 'Package' },
   ]);
+  const [selectedItemIds, setSelectedItemIds] = useState([]);
 
   // Static data
   const salonData = {
@@ -28,11 +31,20 @@ export default function FemaleScreen({ navigation }) {
     distance: '5.0 Kms',
     priceLevel: '$$',
     address: 'Keira throughway',
-  };
+  };  
 
-  useEffect(() => {
-    fetchServices();
-  }, []);
+  const fetchSelectedItemsAndServices = async () => {
+    const ids = await getServiceIds()
+    setSelectedItemIds(ids || []);
+    console.log('selectedItemIds:', selectedItemIds);
+    await fetchServices();
+  }
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchSelectedItemsAndServices();
+    }, [])
+  );
 
   useEffect(() => {
     if (selectedTab === 'all') {
@@ -63,7 +75,7 @@ export default function FemaleScreen({ navigation }) {
       } else {
         console.error('Error message:', error.message);
       }
-      setServices([]); // Ensure services is always an array
+      setServices([]);
     }
   };
 
@@ -106,7 +118,7 @@ export default function FemaleScreen({ navigation }) {
   const handleShare = async () => {
     try {
       await Share.share({
-        message: 'Check out Woodlands Hills Salon! Great services and packages. ⭐ 4.1 (5k+ ratings)',
+        message: `Check out ${salonData.name}! Great services and packages. ⭐ ${salonData.rating}`,
       });
     } catch (error) {
       alert('Error sharing');
@@ -114,7 +126,7 @@ export default function FemaleScreen({ navigation }) {
   };
 
   const handleDirections = () => {
-    // Implement directions functionality here
+
   };
 
   const capitalizeFirstLetter = (string) => {
@@ -135,9 +147,21 @@ export default function FemaleScreen({ navigation }) {
           <Text style={styles.serviceText}>{item.duration} mins</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.selectButton}>
-        <Text style={styles.selectText}>Select</Text>
-      </TouchableOpacity>
+      {
+        selectedItemIds.includes(item._id) ? (
+          <TouchableOpacity style={styles.selectedButton} onPress={() => {
+            navigation.navigate('Detail', { itemId: item._id });
+          }}>
+            <Text style={styles.selectedText}>Selected</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.selectButton} onPress={() => {
+            navigation.navigate('Detail', { itemId: item._id });
+          }}>
+            <Text style={styles.selectText}>Select</Text>
+          </TouchableOpacity>
+        )
+      }
     </View>
   );
 
@@ -152,13 +176,18 @@ export default function FemaleScreen({ navigation }) {
         )}
         ListHeaderComponent={() => (
           <>
-            {/* Header Section */}
             <View style={styles.header}>
               <ImageBackground
                 resizeMode="cover"
                 source={{ uri: salonData.banner }}
                 style={styles.headerImage}
               />
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => navigation.navigate("HomeScreen")}
+              >
+                <Ionicons name="arrow-back" size={23} color="black" />
+              </TouchableOpacity>
               <View style={styles.headerImageOverlay}>
                 <View style={styles.headerContent}>
                   <Text style={styles.salonName}>{salonData.name}</Text>
@@ -167,7 +196,6 @@ export default function FemaleScreen({ navigation }) {
               </View>
             </View>
 
-            {/* Action Buttons */}
             <View style={styles.headerActionsContainer}>
               <View style={styles.headerActions}>
                 <TouchableOpacity style={styles.headerActionsButtons} onPress={handleCall}>
@@ -189,7 +217,6 @@ export default function FemaleScreen({ navigation }) {
               </View>
             </View>
 
-            {/* Draggable Tabs */}
             <View style={styles.tabsContainer}>
               <FlatList
                 data={tabs}
@@ -214,6 +241,19 @@ export default function FemaleScreen({ navigation }) {
         )}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
+      {
+        selectedItemIds.length > 0 && (
+          <View style={styles.selectedItemsContainer}>
+            <Text style={styles.selectedItemsText}>{selectedItemIds.length === 1 ? `${selectedItemIds.length} service selected` : `${selectedItemIds.length} services selected`}</Text>
+            <TouchableOpacity
+              style={styles.btnFinishBooking}
+              onPress={() => navigation.navigate('Checkout')}
+            >
+              <Text style={styles.btnFinishBookingText}>Finish booking</Text>
+            </TouchableOpacity>
+          </View>
+        )
+      }
     </View>
   );
 }

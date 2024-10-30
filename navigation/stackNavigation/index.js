@@ -5,13 +5,9 @@ import SettingScreen from "../../screens/SettingsScreen/SettingsScreen";
 import SettingSavedAddress from "../../screens/SettingsScreen/SettingsSavedAddress";
 import BookingScreen from "../../screens/BookingScreen/BookingScreen";
 import ShopScreen from "../../screens/ShopScreen/ShopScreen";
-import FemaleScreen from "../../screens/ShopScreen/FemaleScreen";
+import FemaleShopScreen from "../../screens/ShopScreen/FemaleShopScreen";
 import BookingDetailScreen from "../../screens/BookingScreen/BookingDetailScreen";
-import DetailScreen from "../../screens/DetailScreen/DetailScreen";
-import CheckoutScreen from "../../screens/CheckoutScreen/CheckoutScreen";
-import { CheckoutDateScreen } from "../../screens/CheckoutScreen/CheckoutDateScreen";
-import CheckoutResultFailedScreen from "../../screens/CheckoutScreen/CheckoutResultFailedScreen";
-import { CheckoutResultSuccessScreen } from "../../screens/CheckoutScreen/CheckoutResultSuccessScreen";
+
 const Stack = createStackNavigator();
 
 const HomeStack = () => (
@@ -36,7 +32,7 @@ const HomeStack = () => (
     />
     <Stack.Screen
       name="femaleShop"
-      component={FemaleScreen}
+      component={FemaleShopScreen}
       options={{
         headerShown: false,
       }}
@@ -73,20 +69,14 @@ const BookingStack = () => {
 const SettingsStack = () => {
   return (
     <Stack.Navigator
+      initialRouteName="SettingsScreen"
       screenOptions={{
         gestureEnabled: true,
       }}
     >
       <Stack.Screen
-        name="Settings"
+        name="SettingsScreen"
         component={SettingScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="SettingsSavedAddress"
-        component={SettingSavedAddress}
         options={{
           headerShown: false,
         }}

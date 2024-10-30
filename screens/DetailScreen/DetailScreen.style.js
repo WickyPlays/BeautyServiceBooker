@@ -65,6 +65,24 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  ratingInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  rating: {
+    fontSize: 18,
+    color: "#282828",
+  },
+  ratingVoters: {
+    fontSize: 14,
+    color: "#555",
+  },
   descriptionLabel: {
     fontSize: 16,
     fontWeight: "bold",
@@ -85,7 +103,7 @@ export const styles = StyleSheet.create({
     color: "#555",
   },
   priceContainer: {
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 20,
     flexDirection: 'row',
     alignItems: 'center',

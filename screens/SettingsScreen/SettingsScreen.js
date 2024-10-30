@@ -154,7 +154,7 @@ const menuItems = [
   {
     icon: "location-outline",
     title: "Manage Address",
-    redirectStack: "Setting",
+    redirectStack: null,
     redirect: {
       screen: "SettingsSavedAddress",
     },

@@ -216,6 +216,18 @@ export default function DetailScreen() {
 				<Image style={styles.productImage} src={item?.image} />
 				<View style={styles.infoContainer}>
 					<Text style={styles.title}>{item?.name}</Text>
+
+					<View style={styles.ratingContainer}>
+						<Ionicons name="star" size={23} color="#FFD700" style={{ marginRight: 5 }} />
+						<View style={styles.ratingInfo}>
+							<Text style={styles.rating}>
+								{item?.averageRating?.toFixed(1)}
+							</Text>
+							<Text style={styles.ratingVoters}>
+								({item?.comments?.length} ratings)
+							</Text>
+						</View>
+					</View>
 					<Text style={styles.descriptionLabel}>Description:</Text>
 					<Text style={styles.description}>{item?.description}</Text>
 
@@ -268,7 +280,7 @@ export default function DetailScreen() {
 					</View>
 
 					<View style={styles.priceContainer}>
-						<Text>Starting at</Text>
+						<Text style={{ fontSize: 20 }}>Starting at</Text>
 						<Text style={styles.discountedPrice}>${item.price}</Text>
 					</View>
 

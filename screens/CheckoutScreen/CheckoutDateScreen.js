@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { styles } from './CheckoutDateScreen.style';
 import { getServiceDateId, setServiceDateId } from '../../commons/checkoutStore';
 import { useNavigation } from '@react-navigation/native';
@@ -12,7 +12,7 @@ export const CheckoutDateScreen = () => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const times = [
+  const allTimes = [
     '09:00 AM', '11:00 AM', '01:00 PM', '03:00 PM', '05:00 PM', '07:00 PM'
   ];
 
@@ -25,19 +25,19 @@ export const CheckoutDateScreen = () => {
   };
 
   const handleConfirm = (date) => {
-    setSelectedDate(moment(date).format('ddd, MMM D'));
+    const gmt7Date = moment(date).tz('Asia/Bangkok').format('ddd, MMM D');
+    setSelectedDate(gmt7Date);
     hideDatePicker();
   };
 
   const handleConfirmButtonPress = () => {
     if (selectedDate && selectedTime) {
       const [hours, minutes] = moment(selectedTime, 'hh:mm A').format('HH:mm').split(':');
-      const fullDateTime = moment(selectedDate, 'ddd, MMM D')
+      const fullDateTime = moment.tz(selectedDate, 'ddd, MMM D', 'Asia/Bangkok')
         .set({ hour: parseInt(hours), minute: parseInt(minutes) })
         .toDate();
 
-        setServiceDateId(fullDateTime);
-
+      setServiceDateId(fullDateTime);
       navigation.navigate('Checkout');
     } else {
       alert('Please select a date and time first.');
@@ -48,7 +48,7 @@ export const CheckoutDateScreen = () => {
     const getDate = async () => {
       const date = await getServiceDateId();
       if (date) {
-        const datetime = moment(date);
+        const datetime = moment(date).tz('Asia/Bangkok');
         setSelectedDate(datetime.format('ddd, MMM D'));
         setSelectedTime(datetime.format('hh:mm A'));
       } else {
@@ -58,6 +58,18 @@ export const CheckoutDateScreen = () => {
     };
     getDate();
   }, []);
+
+  const today = moment().tz('Asia/Bangkok').format('ddd, MMM D');
+  const filteredTimes = allTimes.map((time) => {
+    const isToday = selectedDate === today;
+    const timeMoment = moment.tz(time, 'hh:mm A', 'Asia/Bangkok');
+    const isPast = isToday && timeMoment.isBefore(moment().tz('Asia/Bangkok'));
+
+    return {
+      time,
+      isDisabled: isPast
+    };
+  });
 
   return (
     <View style={styles.container}>
@@ -86,14 +98,16 @@ export const CheckoutDateScreen = () => {
       <View>
         <Text style={styles.sectionTitle}>When would you like your service?</Text>
         <View style={styles.timeContainer}>
-          {times.map((time, index) => (
+          {filteredTimes.map(({ time, isDisabled }, index) => (
             <TouchableOpacity
               key={index}
               style={[
                 styles.timeBox,
-                selectedTime === time && styles.selectedBox
+                selectedTime === time && styles.selectedBox,
+                isDisabled && styles.disabledTimeBox 
               ]}
-              onPress={() => setSelectedTime(time)}
+              onPress={() => !isDisabled && setSelectedTime(time)}
+              disabled={isDisabled}
             >
               <Text style={styles.timeText}>{time}</Text>
             </TouchableOpacity>
@@ -104,10 +118,6 @@ export const CheckoutDateScreen = () => {
       <View style={styles.footer}>
         <View>
           <Text style={styles.cardInfo}>Visa •••• 0981</Text>
-          <View style={styles.priceContainer}>
-            {/* <Text style={styles.priceText}>$449</Text>
-            <Text style={styles.taxText}>plus taxes</Text> */}
-          </View>
         </View>
         <View>
           <TouchableOpacity

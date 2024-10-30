@@ -20,7 +20,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "me.thienbao860.mma301.beautyservicebooker",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "beautyservicebooker"
+          },
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

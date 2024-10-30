@@ -48,6 +48,9 @@ export const styles = StyleSheet.create({
     borderColor: '#7B61FF',
     backgroundColor: '#F3EFFF',
   },
+  disabledTimeBox: {
+    opacity: 0.4,
+  },
   timeContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',

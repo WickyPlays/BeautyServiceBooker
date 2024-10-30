@@ -15,6 +15,8 @@ import { CheckoutResultSuccessScreen } from "./screens/CheckoutScreen/CheckoutRe
 import { CheckoutDateScreen } from "./screens/CheckoutScreen/CheckoutDateScreen";
 import * as Linking from 'expo-linking';
 import ProfileEditScreen from "./screens/ProfileEditScreen/ProfileEditScreen";
+import SettingsNotification from "./screens/SettingsScreen/SettingsNotification";
+import SettingsAbout from "./screens/SettingsScreen/SettingsAbout";
 
 const Stack = createStackNavigator();
 
@@ -87,6 +89,16 @@ export default function App() {
                   name="Profile Edit"
                   component={ProfileEditScreen}
                   options={{ headerShown: true }}
+                />
+                <Stack.Screen
+                  name="SettingsNotification"
+                  component={SettingsNotification}
+                  options={{ headerShown: true, title: "Notifications" }}
+                />
+                <Stack.Screen
+                  name="SettingsAbout"
+                  component={SettingsAbout}
+                  options={{ headerShown: true, title: "About" }}
                 />
               </>
             )}

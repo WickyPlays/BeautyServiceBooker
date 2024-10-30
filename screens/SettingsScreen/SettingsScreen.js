@@ -11,11 +11,9 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { styles } from "./SettingsScreen.style";
 import CryptoJS from "crypto-js";
-import {aget} from "../../commons/util_axios";
+import { aget } from "../../commons/util_axios";
 import useAuthStore from "../../commons/authenStore";
 import useNavigationStore from "../../navigationRef";
-
-const refreshTimeout = 2000;
 
 export default function SettingsScreen({ navigation }) {
   const [user, setUser] = useState(null);
@@ -105,7 +103,13 @@ const MenuSection = ({ navigation }) => (
 const MenuItem = ({ navigation, icon, title, subtitle, redirectStack, redirect }) => (
   <TouchableOpacity
     style={styles.menuItem}
-    onPress={() => redirect && navigation.navigate(redirectStack, redirect)}
+    onPress={() => {
+      if (redirectStack) {
+        navigation.navigate(redirectStack, redirect);
+      } else {
+        navigation.navigate(redirect.screen, redirect.params);
+      }
+    }}
   >
     <Ionicons name={icon} size={24} color="#000" />
     <View style={styles.menuText}>
@@ -159,10 +163,18 @@ const menuItems = [
     icon: "notifications-outline",
     title: "Notifications",
     subtitle: "View your past notifications",
+    redirectStack: null,
+    redirect: {
+      screen: "SettingsNotification",
+    },
   },
   {
     icon: "information-circle-outline",
     title: "About",
     subtitle: "Privacy Policy, Terms of Services, Licenses",
+    redirectStack: null,
+    redirect: {
+      screen: "SettingsAbout",
+    },
   },
 ];

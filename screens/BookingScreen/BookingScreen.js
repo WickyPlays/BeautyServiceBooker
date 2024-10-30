@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text, View, TouchableOpacity, Alert, ScrollView, Modal, RefreshControl } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+  Modal,
+  RefreshControl,
+} from "react-native";
 import { aget, apost, apatch } from "../../commons/util_axios";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
@@ -12,7 +20,11 @@ import FavoritesBookingItem from "./Items/FavoritesBookingItem";
 
 export default function BookingScreen() {
   const [activeTab, setActiveTab] = useState("Upcoming");
-  const [bookings, setBookings] = useState({ past: [], upcoming: [], favorites: [] });
+  const [bookings, setBookings] = useState({
+    past: [],
+    upcoming: [],
+    favorites: [],
+  });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -26,14 +38,20 @@ export default function BookingScreen() {
   const { user } = useAuthStore();
   const userId = user._id;
 
-  const fetchBookings = useCallback(async (type) => {
-    try {
-      const response = await aget(`/appointments/${type}/${userId}`);
-      setBookings((prevBookings) => ({ ...prevBookings, [type]: response.data || [] }));
-    } catch (error) {
-      console.error(`Error fetching ${type} bookings:`, error);
-    }
-  }, [userId]);
+  const fetchBookings = useCallback(
+    async (type) => {
+      try {
+        const response = await aget(`/appointments/${type}/${userId}`);
+        setBookings((prevBookings) => ({
+          ...prevBookings,
+          [type]: response.data || [],
+        }));
+      } catch (error) {
+        console.error(`Error fetching ${type} bookings:`, error);
+      }
+    },
+    [userId]
+  );
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -58,7 +76,9 @@ export default function BookingScreen() {
       await apost(`/appointments/${userId}/${action}/${appointmentId}`);
       const updateBookings = (bookings) =>
         bookings.map((booking) =>
-          booking.id === appointmentId ? { ...booking, isFavorite: !booking.isFavorite } : booking
+          booking.id === appointmentId
+            ? { ...booking, isFavorite: !booking.isFavorite }
+            : booking
         );
       setBookings((prevBookings) => ({
         ...prevBookings,
@@ -81,8 +101,12 @@ export default function BookingScreen() {
             await apatch(`/appointments/cancel/${appointmentId}`);
             setBookings((prevBookings) => ({
               ...prevBookings,
-              upcoming: prevBookings.upcoming.filter((booking) => booking.id !== appointmentId),
-              favorites: prevBookings.favorites.filter((booking) => booking.id !== appointmentId),
+              upcoming: prevBookings.upcoming.filter(
+                (booking) => booking.id !== appointmentId
+              ),
+              favorites: prevBookings.favorites.filter(
+                (booking) => booking.id !== appointmentId
+              ),
             }));
           } catch (error) {
             console.error("Error cancelling booking:", error);
@@ -102,7 +126,9 @@ export default function BookingScreen() {
     ).toISOString();
 
     try {
-      await apatch(`/appointments/reschedule/${appointmentId}`, { appointmentDate: newDateTime });
+      await apatch(`/appointments/reschedule/${appointmentId}`, {
+        appointmentDate: newDateTime,
+      });
       setIsModalVisible(false);
     } catch (error) {
       console.error("Error rescheduling booking:", error);
@@ -159,11 +185,17 @@ export default function BookingScreen() {
 
       <ScrollView
         style={styles.scrollView}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <View style={styles.content}>
           {activeTab === "Past" && (
-            <PastBookingItem bookings={bookings.past} handleFavoriteToggle={handleFavoriteToggle} handleServiceItemPress={handleServiceItemPress} />
+            <PastBookingItem
+              bookings={bookings.past}
+              handleFavoriteToggle={handleFavoriteToggle}
+              handleServiceItemPress={handleServiceItemPress}
+            />
           )}
           {activeTab === "Upcoming" && (
             <UpcomingBookingItem
@@ -175,24 +207,50 @@ export default function BookingScreen() {
             />
           )}
           {activeTab === "Favorites" && (
-            <FavoritesBookingItem bookings={bookings.favorites} handleFavoriteToggle={handleFavoriteToggle} handleServiceItemPress={handleServiceItemPress} />
+            <FavoritesBookingItem
+              bookings={bookings.favorites}
+              handleFavoriteToggle={handleFavoriteToggle}
+              handleServiceItemPress={handleServiceItemPress}
+            />
           )}
         </View>
       </ScrollView>
 
-      <Modal visible={isModalVisible} transparent animationType="slide" onRequestClose={() => setIsModalVisible(false)}>
+      <Modal
+        visible={isModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setIsModalVisible(false)}
+      >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Reschedule Booking</Text>
             {selectedBooking && (
               <>
-                <Text style={[styles.modalText, { color: 'black' }]}>Appointment with {selectedBooking.stylistName}</Text> {/* Set color to black */}
-                <Text style={[styles.modalText, { color: 'black' }]}>Current Date: {new Date(selectedBooking.appointmentDate).toLocaleDateString()}</Text> {/* Set color to black */}
-                <TouchableOpacity onPress={() => setDatePickerVisibility(true)} style={styles.datePickerButton}>
-                  <Text style={styles.datePickerButtonText}>Choose New Date</Text>
+                <Text style={[styles.modalText, { color: "black" }]}>
+                  Appointment with {selectedBooking.stylistName}
+                </Text>
+                <Text style={[styles.modalText, { color: "black" }]}>
+                  Current Date:{" "}
+                  {new Date(
+                    selectedBooking.appointmentDate
+                  ).toLocaleDateString()}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => setDatePickerVisibility(true)}
+                  style={styles.datePickerButton}
+                >
+                  <Text style={styles.datePickerButtonText}>
+                    Choose New Date
+                  </Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => setTimePickerVisibility(true)} style={styles.datePickerButton}>
-                  <Text style={styles.datePickerButtonText}>Choose New Time</Text>
+                <TouchableOpacity
+                  onPress={() => setTimePickerVisibility(true)}
+                  style={styles.datePickerButton}
+                >
+                  <Text style={styles.datePickerButtonText}>
+                    Choose New Time
+                  </Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
                   isVisible={isDatePickerVisible}
@@ -209,10 +267,16 @@ export default function BookingScreen() {
               </>
             )}
             <View style={styles.modalButtonRow}>
-              <TouchableOpacity style={styles.modalButton} onPress={() => setIsModalVisible(false)}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => setIsModalVisible(false)}
+              >
                 <Text style={styles.modalButtonText}>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.modalButton} onPress={() => handleReschedule(selectedBooking.id)}>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={() => handleReschedule(selectedBooking.id)}
+              >
                 <Text style={styles.modalButtonText}>Reschedule</Text>
               </TouchableOpacity>
             </View>

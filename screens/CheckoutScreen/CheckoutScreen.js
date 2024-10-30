@@ -76,7 +76,8 @@ export default function CheckoutScreen() {
 				let data = res.data;
 				let url = data.url;
 
-				Linking.openURL(url);
+				// Linking.openURL(url);
+				navigation.navigate('CheckoutWebViewScreen', { url: url });
 			})
 		} catch (error) {
 			console.error("Error creating appointment:", error);

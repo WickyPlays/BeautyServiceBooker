@@ -18,6 +18,7 @@ import ProfileEditScreen from "./screens/ProfileEditScreen/ProfileEditScreen";
 import SettingsNotification from "./screens/SettingsScreen/SettingsNotification";
 import SettingsAbout from "./screens/SettingsScreen/SettingsAbout";
 import SettingsSavedAddress from "./screens/SettingsScreen/SettingsSavedAddress";
+import { CheckoutWebViewScreen } from "./screens/CheckoutWebviewScreen/CheckoutWebviewScreen";
 
 const Stack = createStackNavigator();
 
@@ -49,28 +50,6 @@ const CheckAuthProvider = ({ children }) => {
 };
 
 export default function App() {
-
-  useEffect(() => {
-    const handleDeepLink = (url) => {
-      const parsedUrl = new URL(url);
-      const amount = parsedUrl.searchParams.get('vnp_Amount');
-      if (amount) {
-        Alert.alert("Transaction Successful", `Amount: ${amount}`);
-      }
-    };
-
-    const linkingListener = Linking.addEventListener('url', ({ url }) => handleDeepLink(url));
-
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        handleDeepLink(url);
-      }
-    });
-
-    return () => {
-      linkingListener.remove();
-    };
-  }, []);
 
   return (
     <NavigationContainer ref={navigationRef} linking={linking}>
@@ -132,6 +111,9 @@ export default function App() {
                     title: "Saved Address",
                   }}
                 />
+                <Stack.Screen name="WebViewScreen" component={CheckoutWebViewScreen}
+                  options={{ headerShown: true, title: "Checkout" }} />
+
               </>
             )}
           </Stack.Navigator>
